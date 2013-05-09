@@ -40,7 +40,42 @@ public class PeripheralsManager {
 
     }
 
+    /**
+     * Especifica el estado de los sensores de temperatura.
+     *
+     * @param state
+     */
+    public void setTemperatureSensorState(String state) {
+
+        if (state.equals("on")) {
+            this.temperatureSensor = new TemperatureActiveSensor();
+        }
+
+        if (state.equals("off")) {
+            this.temperatureSensor = new TemperatureNotActiveSensor();
+        }
+
+        if (state.equals("notpresent")) {
+            this.temperatureSensor = new NotTemperatureSensor();
+        }
+
+    }
+
+    /**
+     * Medida del sensor de luz.
+     *
+     * @return
+     */
     public String getLightMeasure() {
         return this.lightSensor.getMeasure();
+    }
+
+    /**
+     * Medida del sensor de temperatura.
+     *
+     * @return
+     */
+    public String getTemperatureMeasure() {
+        return this.temperatureSensor.getMeasure();
     }
 }
