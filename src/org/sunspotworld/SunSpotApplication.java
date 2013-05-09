@@ -8,9 +8,6 @@ package org.sunspotworld;
 import com.sun.spot.io.j2me.radiogram.RadiogramConnection;
 import com.sun.spot.peripheral.NoRouteException;
 import com.sun.spot.peripheral.radio.RadioFactory;
-import com.sun.spot.resources.Resources;
-import com.sun.spot.resources.transducers.ILightSensor;
-import com.sun.spot.resources.transducers.ITemperatureInput;
 
 import com.sun.spot.util.IEEEAddress;
 import com.sun.spot.util.Utils;
@@ -21,6 +18,7 @@ import javax.microedition.io.Datagram;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+import org.spot.application.peripherals.Factory.PeripheralsManager;
 
 /**
  * The startApp method of this class is called by the VM to start the
@@ -53,11 +51,8 @@ public class SunSpotApplication extends MIDlet {
     private final boolean BROADCAST = true;
     private final boolean NO_BROADCAST = false;
     private String ourAddress;
-    private ILightSensor lightSensor;
-    private ITemperatureInput tempSensor;
-    private boolean condls;
-    private boolean condts;
     private final String EMPTY = "";
+    private PeripheralsManager pm;
 
     protected void startApp() throws MIDletStateChangeException {
 
@@ -65,10 +60,7 @@ public class SunSpotApplication extends MIDlet {
 
         long ourAddr = RadioFactory.getRadioPolicyManager().getIEEEAddress();
         ourAddress = IEEEAddress.toDottedHex(ourAddr);
-        lightSensor = (ILightSensor) Resources.lookup(ILightSensor.class);
-        tempSensor = (ITemperatureInput) Resources.lookup(ITemperatureInput.class);
-        condls = true;
-        condts = true;
+        pm = new PeripheralsManager();
         System.out.println("Our radio address = " + ourAddress);
         try {
             //Abre la conexion en modo servidor para recibir datos broadcast
@@ -196,72 +188,6 @@ public class SunSpotApplication extends MIDlet {
     }
 
     /**
-     * Obtiene el valor del sensor de luz si esta activo en caso de no estarlo
-     * devuelve un mensaje de error
-     *
-     * @return
-     */
-    private String getLightMeasure() {
-        String _temp = null;
-        try {
-            if (condls) {
-                int _value = lightSensor.getValue();
-                _temp = String.valueOf(_value);
-                System.out.println("Light sensor value " + _value);
-            } else {
-                _temp = String.valueOf("Sensor OFF");
-                System.out.println("Sensor OFF");
-            }
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-        return _temp;
-    }
-
-    /**
-     * Obtiene el valor del sensor de temperatura si esta activo en caso de no
-     * estarlo devuelve un mensaje de error
-     *
-     * @return
-     */
-    private String getTemperatureMeasure() {
-        String _temp = null;
-        try {
-            if (condls) {
-                double _value = tempSensor.getCelsius();
-                _temp = String.valueOf(_value);
-                System.out.println("Temperature sensor value " + _value);
-            } else {
-                _temp = String.valueOf("Sensor OFF");
-                System.out.println("Sensor OFF");
-            }
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-        return _temp;
-    }
-
-    private void setLightSensorOn() {
-        this.condls = true;
-        System.out.println("Light sensor " + condls);
-    }
-
-    private void setLightSensorOff() {
-        this.condls = false;
-        System.out.println("Light sensor " + condls);
-    }
-
-    private void setTemperatureSensorOn() {
-        this.condts = true;
-        System.out.println("Temperature sensor " + condts);
-    }
-
-    private void setTemperatureSensorOff() {
-        this.condts = false;
-        System.out.println("Temperature sensor " + condts);
-    }
-
-    /**
      * Activa o desactiva sensores
      *
      * @param type
@@ -272,19 +198,19 @@ public class SunSpotApplication extends MIDlet {
 
         String _temp = null;
         if (Integer.parseInt(value) == LIGHTSENSORON) {
-            setLightSensorOn();
+            this.pm.setLightSensorState("on");
             _temp = "Light sensor ON";
         }
         if (Integer.parseInt(value) == LIGHTSENSOROFF) {
-            setLightSensorOff();
+            this.pm.setLightSensorState("off");
             _temp = "Light sensor OFF";
         }
         if (Integer.parseInt(value) == TEMPERATURESENSORON) {
-            setTemperatureSensorOn();
+            this.pm.setTemperatureSensorState("on");
             _temp = "Temperature sensor ON";
         }
         if (Integer.parseInt(value) == TEMPERATURESENSOROFF) {
-            setTemperatureSensorOff();
+            this.pm.setTemperatureSensorState("off");
             _temp = "Temperature sensor OFF";
         }
         return _temp;
@@ -337,18 +263,16 @@ public class SunSpotApplication extends MIDlet {
      * @throws IOException
      */
     private void processPDU(int _type, String _GUID, boolean _broadcast, String _value) throws NumberFormatException, IOException {
-        String _temp;
+
         switch (_type) {
             case PING_PACKET_REQUEST:
                 replyToPing();
                 break;
             case MEASURE_LIGHT:
-                _temp = getLightMeasure();
-                sendToPeer(_type, _temp, _GUID, _broadcast);
+                sendToPeer(_type, this.pm.getLightMeasure(), _GUID, _broadcast);
                 break;
             case MEASURE_TEMPERATURE:
-                _temp = getTemperatureMeasure();
-                sendToPeer(_type, _temp, _GUID, _broadcast);
+                sendToPeer(_type, this.pm.getTemperatureMeasure(), _GUID, _broadcast);
                 break;
             case CHECK:
                 System.out.println("CHECK");
@@ -356,8 +280,7 @@ public class SunSpotApplication extends MIDlet {
                 break;
             case FEATURE:
                 System.out.println("FEATURES");
-                _temp = configFeatures(_value);
-                sendToPeer(_type, _temp, _GUID, _broadcast);
+                sendToPeer(_type, configFeatures(_value), _GUID, _broadcast);
                 break;
         }
     }

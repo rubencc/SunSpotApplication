@@ -22,7 +22,7 @@ public class PeripheralsManager {
     /**
      * Especifica el estado de los sensores de luz.
      *
-     * @param state
+     * @param state "on","off","notpresent"
      */
     public void setLightSensorState(String state) {
 
@@ -43,7 +43,7 @@ public class PeripheralsManager {
     /**
      * Especifica el estado de los sensores de temperatura.
      *
-     * @param state
+     * @param state "on","off","notpresent"
      */
     public void setTemperatureSensorState(String state) {
 
