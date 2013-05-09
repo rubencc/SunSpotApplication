@@ -66,7 +66,7 @@ public class SunSpotApplication extends MIDlet {
             //Abre la conexion en modo servidor para recibir datos broadcast
             bCon = (RadiogramConnection) Connector.open("radiogram://:" + BROADCAST_PORT);
             bDg = bCon.newDatagram(bCon.getMaximumLength());
-            System.out.println("Escuchando brodascast");
+            System.out.println("Escuchando brodascast --");
             while (true) {
                 if (bCon.packetsAvailable()) {
                     readBroadcast();
