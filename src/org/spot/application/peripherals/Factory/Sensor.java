@@ -12,7 +12,7 @@ import org.spot.application.Interfaces.ISensor;
  */
 public abstract class Sensor implements ISensor {
 
-    private String sensorName;
+    String sensorName;
 
     public Sensor(String name) {
         this.sensorName = name;

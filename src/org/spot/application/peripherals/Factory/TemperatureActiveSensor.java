@@ -10,16 +10,16 @@ import java.io.IOException;
  *
  * @author rubencc
  */
-public class LightActiveSensor extends LightSensor {
+public class TemperatureActiveSensor extends TemperatureSensor {
 
-    public LightActiveSensor() {
+    public TemperatureActiveSensor() {
         super();
     }
 
     public String getMeasure() {
         String _temp = null;
         try {
-            _temp = String.valueOf(this.lightSensor.getValue());
+            _temp = String.valueOf(this.tempSensor.getCelsius());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

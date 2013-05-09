@@ -13,7 +13,7 @@ import com.sun.spot.resources.transducers.ILightSensor;
  */
 public abstract class LightSensor extends Sensor {
 
-    private ILightSensor lightSensor;
+    protected ILightSensor lightSensor;
     private static final String LIGHT = "light";
 
     public LightSensor() {

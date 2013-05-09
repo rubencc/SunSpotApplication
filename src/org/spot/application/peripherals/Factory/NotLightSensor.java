@@ -10,11 +10,13 @@ package org.spot.application.peripherals.Factory;
  */
 public class NotLightSensor extends LightSensor {
 
+    private final String MESSAGE = "This sensor is not installed";
+
     public NotLightSensor() {
         super();
     }
 
     public String getMeasure() {
-        return null;
+        return MESSAGE;
     }
 }
