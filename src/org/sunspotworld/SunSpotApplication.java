@@ -269,9 +269,11 @@ public class SunSpotApplication extends MIDlet {
                 replyToPing();
                 break;
             case MEASURE_LIGHT:
+                System.out.println("MEASURE LIGHT");
                 sendToPeer(_type, this.pm.getLightMeasure(), _GUID, _broadcast);
                 break;
             case MEASURE_TEMPERATURE:
+                System.out.println("MEASURE TEMPERATURE");
                 sendToPeer(_type, this.pm.getTemperatureMeasure(), _GUID, _broadcast);
                 break;
             case CHECK:

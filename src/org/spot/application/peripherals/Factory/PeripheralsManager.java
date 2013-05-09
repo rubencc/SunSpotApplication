@@ -17,6 +17,7 @@ public class PeripheralsManager {
 
     public PeripheralsManager() {
         this.lightSensor = new NotLightSensor();
+        this.temperatureSensor = new NotTemperatureSensor();
     }
 
     /**
