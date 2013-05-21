@@ -8,6 +8,7 @@ package org.sunspotworld;
 import com.sun.spot.io.j2me.radiogram.RadiogramConnection;
 import com.sun.spot.peripheral.NoRouteException;
 import com.sun.spot.peripheral.radio.RadioFactory;
+import com.sun.spot.resources.transducers.LEDColor;
 
 import com.sun.spot.util.IEEEAddress;
 import com.sun.spot.util.Utils;
@@ -42,16 +43,29 @@ public class SunSpotApplication extends MIDlet {
     private final int PING_PACKET_REPLY = 0x33;
     private final int MEASURE_LIGHT = 0x40;
     private final int MEASURE_TEMPERATURE = 0x41;
+    private final int ACCELEROMETER_X = 0x42;
+    private final int ACCELEROMETER_Y = 0x43;
+    private final int ACCELEROMETER_Z = 0x44;
+    private final int MEASURE_ACCELEROMETER = 0x45;
+    private final int LED_SET_COLOR = 0x46;
+    private final int LED_SET_OFF = 0x47;
+    private final int LED_SET_STATE = 0x48;
+    private final int LED_SET_NUMBER = 0x49;
     private final int CHECK = 0x50;
     private final int FEATURE = 0x60;
     private final int LIGHTSENSORON = 0x61;
     private final int LIGHTSENSOROFF = 0x62;
     private final int TEMPERATURESENSORON = 0x63;
     private final int TEMPERATURESENSOROFF = 0x64;
+    private final int ACCELEROMETERON = 0x65;
+    private final int ACCELEROMETEROFF = 0x66;
+    private final int LEDARRAYON = 0x67;
+    private final int LEDARRAYOFF = 0x68;
     private final boolean BROADCAST = true;
     private final boolean NO_BROADCAST = false;
     private String ourAddress;
     private final String EMPTY = "";
+    private final String PINGREPLY = "Ping Reply";
     private PeripheralsManager pm;
 
     protected void startApp() throws MIDletStateChangeException {
@@ -160,7 +174,8 @@ public class SunSpotApplication extends MIDlet {
         }
         //System.out.println("[Spot " + ourAddress + "] Ping recibido");
         pDg.reset();
-        sendToPeer(PING_PACKET_REPLY, EMPTY, "GUID", BROADCAST);
+        String[] _temp = {EMPTY};
+        sendToPeer(PING_PACKET_REPLY, _temp, "GUID", BROADCAST);
     }
 
     /**
@@ -171,13 +186,16 @@ public class SunSpotApplication extends MIDlet {
      * @param GUID Identificador de la petición
      * @param broadcast Condicion de mensaje de broadcast
      */
-    private void sendToPeer(int type, String value, String GUID, boolean broadcast) {
+    private void sendToPeer(int type, String[] values, String GUID, boolean broadcast) {
         try {
             pDg.reset();
             /*El formato de la PDU es {direccion, tipo, valor, tiempo, guid, broadcast}*/
             pDg.writeUTF(ourAddress);
             pDg.writeInt(type);
-            pDg.writeUTF(value);
+            pDg.writeInt(values.length);
+            for (int i = 0; i < values.length; i++) {
+                pDg.writeUTF(values[i]);
+            }
             pDg.writeLong(System.currentTimeMillis());
             pDg.writeUTF(GUID);
             pDg.writeBoolean(broadcast);
@@ -197,21 +215,39 @@ public class SunSpotApplication extends MIDlet {
     private String configFeatures(String value) throws IOException, NumberFormatException {
 
         String _temp = null;
-        if (Integer.parseInt(value) == LIGHTSENSORON) {
-            this.pm.setLightSensorState("on");
-            _temp = "Light sensor ON";
-        }
-        if (Integer.parseInt(value) == LIGHTSENSOROFF) {
-            this.pm.setLightSensorState("off");
-            _temp = "Light sensor OFF";
-        }
-        if (Integer.parseInt(value) == TEMPERATURESENSORON) {
-            this.pm.setTemperatureSensorState("on");
-            _temp = "Temperature sensor ON";
-        }
-        if (Integer.parseInt(value) == TEMPERATURESENSOROFF) {
-            this.pm.setTemperatureSensorState("off");
-            _temp = "Temperature sensor OFF";
+        switch (Integer.parseInt(value)) {
+            case LIGHTSENSORON:
+                this.pm.setLightSensorState("on");
+                _temp = "Light sensor ON";
+                break;
+            case LIGHTSENSOROFF:
+                this.pm.setLightSensorState("off");
+                _temp = "Light sensor OFF";
+                break;
+            case TEMPERATURESENSORON:
+                this.pm.setTemperatureSensorState("on");
+                _temp = "Temperature sensor ON";
+                break;
+            case TEMPERATURESENSOROFF:
+                this.pm.setTemperatureSensorState("off");
+                _temp = "Temperature sensor OFF";
+                break;
+            case ACCELEROMETERON:
+                this.pm.setAccelerometerState("on");
+                _temp = "Accelerometer ON";
+                break;
+            case ACCELEROMETEROFF:
+                this.pm.setAccelerometerState("off");
+                _temp = "Accelerometer OFF";
+                break;
+            case LEDARRAYON:
+                this.pm.setLedArrayState("on");
+                _temp = "LedArray ON";
+                break;
+            case LEDARRAYOFF:
+                this.pm.setLedArrayState("off");
+                _temp = "LedArray OFF";
+                break;
         }
         return _temp;
     }
@@ -229,9 +265,14 @@ public class SunSpotApplication extends MIDlet {
             firstBroadcast = true;
         }
         int _type = bDg.readInt();
-        String _value = bDg.readUTF();
+        int _count = bDg.readInt();
+        String _values[] = new String[_count];
+        for (int i = 0; i < _count; i++) {
+            _values[i] = bDg.readUTF();
+        }
+
         String _GUID = bDg.readUTF();
-        processPDU(_type, _GUID, _broadcast, _value);
+        processPDU(_type, _GUID, _broadcast, _values);
         bDg.reset();
     }
 
@@ -245,44 +286,94 @@ public class SunSpotApplication extends MIDlet {
         pCon.receive(pDg);
         boolean _broadcast = NO_BROADCAST;
         int _type = pDg.readInt();
-        String _value = pDg.readUTF();
+        int _count = pDg.readInt();
+        String _values[] = new String[_count];
+        for (int i = 0; i < _count; i++) {
+            _values[i] = pDg.readUTF();
+        }
         String _GUID = pDg.readUTF();
-        System.out.println("Dato recibido mediante peer:" + _type + " Valor: " + _value + " GUID:" + _GUID);
-        processPDU(_type, _GUID, _broadcast, _value);
+        System.out.println("Dato recibido mediante peer:" + _type + " Valor: " + _values[0] + " GUID:" + _GUID);
+        processPDU(_type, _GUID, _broadcast, _values);
         pDg.reset();
     }
 
     /**
      * Procesa cada una de las PDUs recibidas
      *
-     * @param _type Tipo de PDU
-     * @param _GUID Identificador asignado a la petición
-     * @param _broadcast Condicion de broadcast
-     * @param _value Valor del comando
+     * @param type Tipo de PDU
+     * @param GUID Identificador asignado a la petición
+     * @param broadcast Condicion de broadcast
+     * @param values Valor del comando
      * @throws NumberFormatException
      * @throws IOException
      */
-    private void processPDU(int _type, String _GUID, boolean _broadcast, String _value) throws NumberFormatException, IOException {
-
-        switch (_type) {
+    private void processPDU(int type, String GUID, boolean broadcast, String[] values) throws NumberFormatException, IOException {
+        String _temp[] = new String[3];
+        switch (type) {
             case PING_PACKET_REQUEST:
                 replyToPing();
                 break;
             case MEASURE_LIGHT:
                 System.out.println("MEASURE LIGHT");
-                sendToPeer(_type, this.pm.getLightMeasure(), _GUID, _broadcast);
+                _temp[0] = this.pm.getLightMeasure();
+                sendToPeer(type, _temp, GUID, broadcast);
                 break;
             case MEASURE_TEMPERATURE:
                 System.out.println("MEASURE TEMPERATURE");
-                sendToPeer(_type, this.pm.getTemperatureMeasure(), _GUID, _broadcast);
+                _temp[0] = this.pm.getTemperatureMeasure();
+                sendToPeer(type, _temp, GUID, broadcast);
+                break;
+            case MEASURE_ACCELEROMETER:
+                System.out.println("MEASURE ACCELEROMETER");
+                _temp[0] = this.pm.getAcceletometerX();
+                _temp[1] = this.pm.getAcceletometerY();
+                _temp[2] = this.pm.getAcceletometerZ();
+                sendToPeer(type, _temp, GUID, broadcast);
+                break;
+//            case LED_SET_COLOR:
+//                System.out.println("LED SET COLOR");
+//                break;
+            case LED_SET_NUMBER:
+                System.out.println("LED SET NUMBER");
+                if (this.pm.ledSetOn(Integer.parseInt(values[0]))) {
+                    _temp[0] = "Leds activados";
+                } else {
+                    _temp[0] = "Error al activar leds";
+                }
+                sendToPeer(type, _temp, GUID, broadcast);
+                break;
+            case LED_SET_OFF:
+                System.out.println("LED SET OFF");
+                if (this.pm.ledSetOff()) {
+                    _temp[0] = "Leds apagados";
+                } else {
+                    _temp[0] = "Error al desactivar leds";
+                }
+                sendToPeer(type, _temp, GUID, broadcast);
+                break;
+            case LED_SET_STATE:
+                System.out.println("LED SET STATE" + values[0]);
+                boolean _cond = false;
+                if (values[0].equals("true")) {
+                    _cond = true;
+                }
+
+                if (this.pm.ledSetOn(_cond)) {
+                    _temp[0] = "Leds cambiados a estado " + _cond;
+                } else {
+                    _temp[0] = "Error al desactivar leds";
+                }
+                sendToPeer(type, _temp, GUID, broadcast);
                 break;
             case CHECK:
                 System.out.println("CHECK");
-                sendToPeer(_type, "Ping Reply", _GUID, _broadcast);
+                String[] _pingReply = {PINGREPLY};
+                sendToPeer(type, _pingReply, GUID, broadcast);
                 break;
             case FEATURE:
                 System.out.println("FEATURES");
-                sendToPeer(_type, configFeatures(_value), _GUID, _broadcast);
+                String[] _features = {configFeatures(values[0])};
+                sendToPeer(type, _features, GUID, broadcast);
                 break;
         }
     }

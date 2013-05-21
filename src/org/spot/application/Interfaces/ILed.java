@@ -12,13 +12,11 @@ import com.sun.spot.resources.transducers.LEDColor;
  */
 public interface ILed {
 
-    void setColor(LEDColor clr);
+    boolean setColor(LEDColor clr);
 
-    void setOff();
+    boolean setOff();
 
-    void setOn();
+    boolean setOn(boolean on);
 
-    void setOn(boolean on);
-
-    void setOn(int bits);
+    boolean setOn(int bits);
 }
