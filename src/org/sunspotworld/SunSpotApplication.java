@@ -8,7 +8,6 @@ package org.sunspotworld;
 import com.sun.spot.io.j2me.radiogram.RadiogramConnection;
 import com.sun.spot.peripheral.NoRouteException;
 import com.sun.spot.peripheral.radio.RadioFactory;
-import com.sun.spot.resources.transducers.LEDColor;
 
 import com.sun.spot.util.IEEEAddress;
 import com.sun.spot.util.Utils;
@@ -19,6 +18,7 @@ import javax.microedition.io.Datagram;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+import org.spot.application.Interfaces.Constans;
 import org.spot.application.peripherals.Factory.PeripheralsManager;
 
 /**
@@ -28,7 +28,7 @@ import org.spot.application.peripherals.Factory.PeripheralsManager;
  * The manifest specifies this class as MIDlet-1, which means it will be
  * selected for execution.
  */
-public class SunSpotApplication extends MIDlet {
+public class SunSpotApplication extends MIDlet implements Constans {
 
     private final int BROADCAST_PORT = 66;
     private final int PEER_PORT = 100;
@@ -39,34 +39,6 @@ public class SunSpotApplication extends MIDlet {
     private String peerAddress;
     private boolean peerConnected;
     private boolean firstBroadcast;
-    private final int PING_PACKET_REQUEST = 0x30;
-    private final int PING_PACKET_REPLY = 0x33;
-    private final int MEASURE_LIGHT = 0x40;
-    private final int MEASURE_TEMPERATURE = 0x41;
-    private final int ACCELEROMETER_X = 0x42;
-    private final int ACCELEROMETER_Y = 0x43;
-    private final int ACCELEROMETER_Z = 0x44;
-    private final int MEASURE_ACCELEROMETER = 0x45;
-    private final int LED_SET_COLOR = 0x46;
-    private final int LED_SET_OFF = 0x47;
-    private final int LED_SET_STATE = 0x48;
-    private final int LED_SET_NUMBER = 0x49;
-    private final int CHECK = 0x50;
-    private final int FEATURE = 0x60;
-    private final int LIGHTSENSOR_ON = 0x61;
-    private final int LIGHTSENSOR_OFF = 0x62;
-    private final int TEMPERATURESENSOR_ON = 0x63;
-    private final int TEMPERATURESENSOR_OFF = 0x64;
-    private final int ACCELEROMETER_ON = 0x65;
-    private final int ACCELEROMETER_OFF = 0x66;
-    private final int LEDARRAY_ON = 0x67;
-    private final int LEDARRAY_OFF = 0x68;
-    private final int LIGHT_SENSOR_NOT_PRESENT = 0x69;
-    private final int TEMPERATURE_SENSOR_NOT_PRESENT = 0x6A;
-    private final int ACCELEROMETER_NOT_PRESENT = 0x6B;
-    private final int LED_ARRAY_NOT_PRESENT = 0x6C;
-    private final boolean BROADCAST = true;
-    private final boolean NO_BROADCAST = false;
     private String ourAddress;
     private final String EMPTY = "";
     private final String PINGREPLY = "Ping Reply";
