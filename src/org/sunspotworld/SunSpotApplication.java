@@ -188,20 +188,24 @@ public class SunSpotApplication extends MIDlet {
      */
     private void sendToPeer(int type, String[] values, String GUID, boolean broadcast) {
         try {
+            int _count = 0;
+            //System.out.print(type + " " + GUID + " " + broadcast);
             pDg.reset();
             /*El formato de la PDU es {direccion, tipo, valor, tiempo, guid, broadcast}*/
             pDg.writeUTF(ourAddress);
             pDg.writeInt(type);
             pDg.writeInt(values.length);
             for (int i = 0; i < values.length; i++) {
-                pDg.writeUTF(values[i]);
+                if (values[i] != null) {
+                    pDg.writeUTF(values[i]);
+                }
             }
             pDg.writeLong(System.currentTimeMillis());
             pDg.writeUTF(GUID);
             pDg.writeBoolean(broadcast);
             pCon.send(pDg);
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -308,13 +312,13 @@ public class SunSpotApplication extends MIDlet {
      * @throws IOException
      */
     private void processPDU(int type, String GUID, boolean broadcast, String[] values) throws NumberFormatException, IOException {
-        String _temp[] = new String[3];
+        String _temp[] = new String[1];
         switch (type) {
             case PING_PACKET_REQUEST:
                 replyToPing();
                 break;
             case MEASURE_LIGHT:
-                System.out.println("MEASURE LIGHT");
+                System.out.println("MEASURE LIGHT ");
                 _temp[0] = this.pm.getLightMeasure();
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;
@@ -325,10 +329,11 @@ public class SunSpotApplication extends MIDlet {
                 break;
             case MEASURE_ACCELEROMETER:
                 System.out.println("MEASURE ACCELEROMETER");
-                _temp[0] = this.pm.getAcceletometerX();
-                _temp[1] = this.pm.getAcceletometerY();
-                _temp[2] = this.pm.getAcceletometerZ();
-                sendToPeer(type, _temp, GUID, broadcast);
+                String _measureAccelerometer[] = new String[3];
+                _measureAccelerometer[0] = this.pm.getAcceletometerX();
+                _measureAccelerometer[1] = this.pm.getAcceletometerY();
+                _measureAccelerometer[2] = this.pm.getAcceletometerZ();
+                sendToPeer(type, _measureAccelerometer, GUID, broadcast);
                 break;
             case LED_SET_COLOR:
                 System.out.println("LED SET COLOR");
