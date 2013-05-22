@@ -10,7 +10,7 @@ package org.spot.application.peripherals.Factory;
  */
 public class LightNotActiveSensor extends LightSensor {
 
-    private final String MESSAGE = "This sensor is not available";
+    private final String MESSAGE = "This sensor is off";
 
     public LightNotActiveSensor() {
         super();

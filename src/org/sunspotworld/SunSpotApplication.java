@@ -53,14 +53,18 @@ public class SunSpotApplication extends MIDlet {
     private final int LED_SET_NUMBER = 0x49;
     private final int CHECK = 0x50;
     private final int FEATURE = 0x60;
-    private final int LIGHTSENSORON = 0x61;
-    private final int LIGHTSENSOROFF = 0x62;
-    private final int TEMPERATURESENSORON = 0x63;
-    private final int TEMPERATURESENSOROFF = 0x64;
-    private final int ACCELEROMETERON = 0x65;
-    private final int ACCELEROMETEROFF = 0x66;
-    private final int LEDARRAYON = 0x67;
-    private final int LEDARRAYOFF = 0x68;
+    private final int LIGHTSENSOR_ON = 0x61;
+    private final int LIGHTSENSOR_OFF = 0x62;
+    private final int TEMPERATURESENSOR_ON = 0x63;
+    private final int TEMPERATURESENSOR_OFF = 0x64;
+    private final int ACCELEROMETER_ON = 0x65;
+    private final int ACCELEROMETER_OFF = 0x66;
+    private final int LEDARRAY_ON = 0x67;
+    private final int LEDARRAY_OFF = 0x68;
+    private final int LIGHT_SENSOR_NOT_PRESENT = 0x69;
+    private final int TEMPERATURE_SENSOR_NOT_PRESENT = 0x6A;
+    private final int ACCELEROMETER_NOT_PRESENT = 0x6B;
+    private final int LED_ARRAY_NOT_PRESENT = 0x6C;
     private final boolean BROADCAST = true;
     private final boolean NO_BROADCAST = false;
     private String ourAddress;
@@ -75,7 +79,7 @@ public class SunSpotApplication extends MIDlet {
         long ourAddr = RadioFactory.getRadioPolicyManager().getIEEEAddress();
         ourAddress = IEEEAddress.toDottedHex(ourAddr);
         pm = new PeripheralsManager();
-        System.out.println("Our radio address = " + ourAddress);
+        System.out.println("Direccion de red = " + ourAddress);
         try {
             //Abre la conexion en modo servidor para recibir datos broadcast
             bCon = (RadiogramConnection) Connector.open("radiogram://:" + BROADCAST_PORT);
@@ -220,37 +224,53 @@ public class SunSpotApplication extends MIDlet {
 
         String _temp = null;
         switch (Integer.parseInt(value)) {
-            case LIGHTSENSORON:
-                this.pm.setLightSensorState("on");
+            case LIGHTSENSOR_ON:
+                this.pm.setLightSensorStatus("on");
                 _temp = "Light sensor ON";
                 break;
-            case LIGHTSENSOROFF:
-                this.pm.setLightSensorState("off");
+            case LIGHTSENSOR_OFF:
+                this.pm.setLightSensorStatus("off");
                 _temp = "Light sensor OFF";
                 break;
-            case TEMPERATURESENSORON:
-                this.pm.setTemperatureSensorState("on");
+            case LIGHT_SENSOR_NOT_PRESENT:
+                this.pm.setLightSensorStatus("notpresent");
+                _temp = "Sensor unavailable";
+                break;
+            case TEMPERATURESENSOR_ON:
+                this.pm.setTemperatureSensorStatus("on");
                 _temp = "Temperature sensor ON";
                 break;
-            case TEMPERATURESENSOROFF:
-                this.pm.setTemperatureSensorState("off");
+            case TEMPERATURESENSOR_OFF:
+                this.pm.setTemperatureSensorStatus("off");
                 _temp = "Temperature sensor OFF";
                 break;
-            case ACCELEROMETERON:
-                this.pm.setAccelerometerState("on");
+            case TEMPERATURE_SENSOR_NOT_PRESENT:
+                this.pm.setTemperatureSensorStatus("notpresent");
+                _temp = "Sensor unavailable";
+                break;
+            case ACCELEROMETER_ON:
+                this.pm.setAccelerometerStatus("on");
                 _temp = "Accelerometer ON";
                 break;
-            case ACCELEROMETEROFF:
-                this.pm.setAccelerometerState("off");
+            case ACCELEROMETER_OFF:
+                this.pm.setAccelerometerStatus("off");
                 _temp = "Accelerometer OFF";
                 break;
-            case LEDARRAYON:
-                this.pm.setLedArrayState("on");
+            case ACCELEROMETER_NOT_PRESENT:
+                this.pm.setAccelerometerStatus("notpresent");
+                _temp = "Acelerometer unavailable";
+                break;
+            case LEDARRAY_ON:
+                this.pm.setLedArrayStatus("on");
                 _temp = "LedArray ON";
                 break;
-            case LEDARRAYOFF:
-                this.pm.setLedArrayState("off");
+            case LEDARRAY_OFF:
+                this.pm.setLedArrayStatus("off");
                 _temp = "LedArray OFF";
+                break;
+            case LED_ARRAY_NOT_PRESENT:
+                this.pm.setLedArrayStatus("notprenset");
+                _temp = "LedArray unavailable";
                 break;
         }
         return _temp;
@@ -338,27 +358,27 @@ public class SunSpotApplication extends MIDlet {
             case LED_SET_COLOR:
                 System.out.println("LED SET COLOR");
                 if (this.pm.ledSetColor(Integer.parseInt(values[0]))) {
-                    _temp[0] = "Color seleccionado";
+                    _temp[0] = "Selected color";
                 } else {
-                    _temp[0] = "Error al modificar color";
+                    _temp[0] = "Error";
                 }
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;
             case LED_SET_NUMBER:
                 System.out.println("LED SET NUMBER");
                 if (this.pm.ledSetOn(Integer.parseInt(values[0]))) {
-                    _temp[0] = "Leds activados";
+                    _temp[0] = "Leds on";
                 } else {
-                    _temp[0] = "Error al activar leds";
+                    _temp[0] = "Error";
                 }
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;
             case LED_SET_OFF:
                 System.out.println("LED SET OFF");
                 if (this.pm.ledSetOff()) {
-                    _temp[0] = "Leds apagados";
+                    _temp[0] = "All leds off";
                 } else {
-                    _temp[0] = "Error al desactivar leds";
+                    _temp[0] = "Error";
                 }
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;
@@ -370,9 +390,9 @@ public class SunSpotApplication extends MIDlet {
                 }
 
                 if (this.pm.ledSetOn(_cond)) {
-                    _temp[0] = "Leds cambiados a estado " + _cond;
+                    _temp[0] = "Status of the leds " + _cond;
                 } else {
-                    _temp[0] = "Error al desactivar leds";
+                    _temp[0] = "Error";
                 }
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;

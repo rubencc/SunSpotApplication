@@ -10,7 +10,7 @@ package org.spot.application.peripherals.Factory;
  */
 public class TemperatureNotActiveSensor extends TemperatureSensor {
 
-    private final String MESSAGE = "This sensor is not available";
+    private final String MESSAGE = "This sensor is off";
 
     public TemperatureNotActiveSensor() {
         super();

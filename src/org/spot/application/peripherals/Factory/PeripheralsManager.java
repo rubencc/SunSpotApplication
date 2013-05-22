@@ -29,7 +29,7 @@ public class PeripheralsManager {
      *
      * @param state "on","off","notpresent"
      */
-    public void setLightSensorState(String state) {
+    public void setLightSensorStatus(String state) {
 
         if (state.equals("on")) {
             this.lightSensor = new LightActiveSensor();
@@ -50,7 +50,7 @@ public class PeripheralsManager {
      *
      * @param state "on","off","notpresent"
      */
-    public void setTemperatureSensorState(String state) {
+    public void setTemperatureSensorStatus(String state) {
 
         if (state.equals("on")) {
             this.temperatureSensor = new TemperatureActiveSensor();
@@ -71,7 +71,7 @@ public class PeripheralsManager {
      *
      * @param state
      */
-    public void setAccelerometerState(String state) {
+    public void setAccelerometerStatus(String state) {
         if (state.equals("on")) {
             this.accelerometer = new AccelerometerActive();
         }
@@ -90,7 +90,7 @@ public class PeripheralsManager {
      *
      * @param state
      */
-    public void setLedArrayState(String state) {
+    public void setLedArrayStatus(String state) {
         if (state.equals("on")) {
             this.ledArray = new LedArrayActive();
         }
