@@ -184,7 +184,7 @@ public class PeripheralsManager {
      * @param color
      * @return
      */
-    public boolean ledSetColor(LEDColor color) {
+    public boolean ledSetColor(int color) {
         return this.ledArray.setColor(color);
     }
 }

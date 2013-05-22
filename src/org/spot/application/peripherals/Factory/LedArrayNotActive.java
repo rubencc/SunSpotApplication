@@ -16,7 +16,7 @@ public class LedArrayNotActive extends LedArray {
         super();
     }
 
-    public boolean setColor(LEDColor clr) {
+    public boolean setColor(int clr) {
         return false;
     }
 

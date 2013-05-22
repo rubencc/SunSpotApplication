@@ -24,7 +24,7 @@ public abstract class LedArray implements ILed {
         this.leds = (ITriColorLEDArray) Resources.lookup(ITriColorLEDArray.class);
     }
 
-    public abstract boolean setColor(LEDColor clr);
+    public abstract boolean setColor(int clr);
 
     public abstract boolean setOff();
 

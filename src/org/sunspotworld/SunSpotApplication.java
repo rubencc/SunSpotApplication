@@ -330,9 +330,15 @@ public class SunSpotApplication extends MIDlet {
                 _temp[2] = this.pm.getAcceletometerZ();
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;
-//            case LED_SET_COLOR:
-//                System.out.println("LED SET COLOR");
-//                break;
+            case LED_SET_COLOR:
+                System.out.println("LED SET COLOR");
+                if (this.pm.ledSetColor(Integer.parseInt(values[0]))) {
+                    _temp[0] = "Color seleccionado";
+                } else {
+                    _temp[0] = "Error al modificar color";
+                }
+                sendToPeer(type, _temp, GUID, broadcast);
+                break;
             case LED_SET_NUMBER:
                 System.out.println("LED SET NUMBER");
                 if (this.pm.ledSetOn(Integer.parseInt(values[0]))) {
