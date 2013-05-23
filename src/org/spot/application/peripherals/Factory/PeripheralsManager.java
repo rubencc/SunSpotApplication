@@ -18,10 +18,10 @@ public class PeripheralsManager {
     private Accelerometer accelerometer;
 
     public PeripheralsManager() {
-        this.lightSensor = new NotLightSensor();
-        this.temperatureSensor = new NotTemperatureSensor();
-        this.accelerometer = new NotAccelerometer();
-        this.ledArray = new NotLedArray();
+        this.lightSensor = new LightActiveSensor();
+        this.temperatureSensor = new TemperatureActiveSensor();
+        this.accelerometer = new AccelerometerActive();
+        this.ledArray = new LedArrayActive();
     }
 
     /**
