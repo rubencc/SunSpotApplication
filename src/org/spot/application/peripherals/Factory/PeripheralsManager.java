@@ -22,6 +22,7 @@ public class PeripheralsManager {
         this.temperatureSensor = new TemperatureActiveSensor();
         this.accelerometer = new AccelerometerActive();
         this.ledArray = new LedArrayActive();
+        this.ledArray.setColor(9);
     }
 
     /**
