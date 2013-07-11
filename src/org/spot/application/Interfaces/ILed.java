@@ -19,4 +19,6 @@ public interface ILed {
     boolean setOn(boolean on);
 
     boolean setOn(int bits);
+
+    String getStatus();
 }

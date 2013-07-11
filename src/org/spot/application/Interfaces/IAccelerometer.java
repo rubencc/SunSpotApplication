@@ -13,4 +13,6 @@ public interface IAccelerometer {
     String getX();
 
     String getY();
+
+    String getStatus();
 }

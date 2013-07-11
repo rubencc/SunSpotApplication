@@ -19,4 +19,8 @@ public class TemperatureNotActiveSensor extends TemperatureSensor {
     public String getMeasure() {
         return MESSAGE;
     }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.NOT_ACTIVE);
+    }
 }

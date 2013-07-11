@@ -11,4 +11,6 @@ package org.spot.application.Interfaces;
 public interface ISensor {
 
     String getMeasure();
+
+    String getStatus();
 }

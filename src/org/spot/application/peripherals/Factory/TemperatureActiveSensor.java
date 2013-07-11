@@ -25,4 +25,8 @@ public class TemperatureActiveSensor extends TemperatureSensor {
         }
         return _temp;
     }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.ACTIVE);
+    }
 }

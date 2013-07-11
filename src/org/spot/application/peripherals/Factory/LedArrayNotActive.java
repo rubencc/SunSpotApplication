@@ -4,8 +4,6 @@
  */
 package org.spot.application.peripherals.Factory;
 
-import com.sun.spot.resources.transducers.LEDColor;
-
 /**
  *
  * @author rubencc
@@ -30,5 +28,9 @@ public class LedArrayNotActive extends LedArray {
 
     public boolean setOn(int bits) {
         return false;
+    }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.NOT_ACTIVE);
     }
 }

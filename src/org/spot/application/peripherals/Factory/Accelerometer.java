@@ -17,6 +17,9 @@ public abstract class Accelerometer implements IAccelerometer {
     private final String NAME = "Accelerometer";
     private String name;
     protected IAccelerometer3D acc;
+    protected final String ACTIVE = "Active";
+    protected final String NOT_ACTIVE = "Not Active";
+    protected final String NOT_INSTALLED = "NOT INSTALLED";
 
     public Accelerometer() {
         this.name = NAME;
@@ -32,4 +35,6 @@ public abstract class Accelerometer implements IAccelerometer {
     public String getName() {
         return this.name;
     }
+
+    public abstract String getStatus();
 }

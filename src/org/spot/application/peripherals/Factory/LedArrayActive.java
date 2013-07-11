@@ -82,4 +82,8 @@ public class LedArrayActive extends LedArray {
         }
         return _color;
     }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.ACTIVE);
+    }
 }

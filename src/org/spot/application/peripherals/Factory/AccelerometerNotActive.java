@@ -27,4 +27,8 @@ public class AccelerometerNotActive extends Accelerometer {
     public String getZ() {
         return MESSAGE;
     }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.NOT_ACTIVE);
+    }
 }

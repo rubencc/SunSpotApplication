@@ -6,7 +6,6 @@ package org.spot.application.peripherals.Factory;
 
 import com.sun.spot.resources.Resources;
 import com.sun.spot.resources.transducers.ITriColorLEDArray;
-import com.sun.spot.resources.transducers.LEDColor;
 import org.spot.application.Interfaces.ILed;
 
 /**
@@ -18,6 +17,9 @@ public abstract class LedArray implements ILed {
     private String name;
     private final String NAME = "LedArray";
     protected ITriColorLEDArray leds;
+    protected final String ACTIVE = "Active";
+    protected final String NOT_ACTIVE = "Not Active";
+    protected final String NOT_INSTALLED = "NOT INSTALLED";
 
     public LedArray() {
         this.name = NAME;
@@ -35,4 +37,6 @@ public abstract class LedArray implements ILed {
     public String getName() {
         return this.name;
     }
+
+    public abstract String getStatus();
 }

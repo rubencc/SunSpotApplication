@@ -188,4 +188,13 @@ public class PeripheralsManager {
     public boolean ledSetColor(int color) {
         return this.ledArray.setColor(color);
     }
+
+    public String[] getStatus() {
+        String[] _status = new String[4];
+        _status[0] = this.lightSensor.getStatus();
+        _status[1] = this.temperatureSensor.getStatus();
+        _status[2] = this.accelerometer.getStatus();
+        _status[3] = this.ledArray.getStatus();
+        return _status;
+    }
 }

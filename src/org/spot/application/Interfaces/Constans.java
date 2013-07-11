@@ -36,6 +36,7 @@ public interface Constans {
     public final int TEMPERATURE_SENSOR_NOT_PRESENT = 0x6A;
     public final int ACCELEROMETER_NOT_PRESENT = 0x6B;
     public final int LED_ARRAY_NOT_PRESENT = 0x6C;
+    public final int READ_CONFIGURATION = 0x80;
     public final boolean BROADCAST = true;
     public final boolean NO_BROADCAST = false;
 }

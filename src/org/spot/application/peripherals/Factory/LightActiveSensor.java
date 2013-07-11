@@ -25,4 +25,8 @@ public class LightActiveSensor extends LightSensor {
         }
         return _temp;
     }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.ACTIVE);
+    }
 }

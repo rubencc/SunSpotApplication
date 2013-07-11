@@ -378,6 +378,11 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 String[] _features = {configFeatures(values[0])};
                 sendToPeer(type, _features, GUID, broadcast);
                 break;
+            case READ_CONFIGURATION:
+                System.out.println("READ FEATURES");
+                String[] _status = this.pm.getStatus();
+                sendToPeer(type, _status, GUID, broadcast);
+                break;
         }
     }
 }

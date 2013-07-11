@@ -45,4 +45,8 @@ public class AccelerometerActive extends Accelerometer {
         }
         return _temp;
     }
+
+    public String getStatus() {
+        return new String(this.getName() + " " + this.ACTIVE);
+    }
 }
