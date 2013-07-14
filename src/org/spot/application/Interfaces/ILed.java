@@ -4,8 +4,6 @@
  */
 package org.spot.application.Interfaces;
 
-import com.sun.spot.resources.transducers.LEDColor;
-
 /**
  *
  * @author rubencc
@@ -19,6 +17,8 @@ public interface ILed {
     boolean setOn(boolean on);
 
     boolean setOn(int bits);
+
+    boolean setOn();
 
     String getStatus();
 }

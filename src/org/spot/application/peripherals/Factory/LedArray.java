@@ -34,6 +34,8 @@ public abstract class LedArray implements ILed {
 
     public abstract boolean setOn(int bits);
 
+    public abstract boolean setOn();
+
     public String getName() {
         return this.name;
     }

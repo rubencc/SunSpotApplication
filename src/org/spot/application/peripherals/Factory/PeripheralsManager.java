@@ -180,6 +180,15 @@ public class PeripheralsManager {
     }
 
     /**
+     * Activa los leds con la ultima configuracion conocida.
+     *
+     * @return
+     */
+    public boolean ledSetOn() {
+        return this.ledArray.setOn();
+    }
+
+    /**
      * Establece el color de los leds.
      *
      * @param color

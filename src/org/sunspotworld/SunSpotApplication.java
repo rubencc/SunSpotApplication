@@ -368,6 +368,33 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 }
                 sendToPeer(type, _temp, GUID, broadcast);
                 break;
+            case LED_TIME:
+                System.out.println("LED TIME " + values[0]);
+                long _value = Long.parseLong(values[0]);
+                pm.ledSetOn(false);
+                pm.ledSetOn();
+                Utils.sleep(_value);
+                pm.ledSetOn(false);
+                String[] _replyTime = new String[1];
+                _replyTime[0] = new String("Leds on while " + _value + "ms");
+                sendToPeer(type, _replyTime, GUID, broadcast);
+                break;
+            case LED_BLINK:
+                System.out.println("LED BLINK " + values[0]);
+                long _blink = Long.parseLong(values[0]);
+                long _period = Long.parseLong(values[1]);
+                long _time = System.currentTimeMillis();
+                pm.ledSetOn(false);
+                while (System.currentTimeMillis() < (_time + _blink)) {
+                    pm.ledSetOn();
+                    Utils.sleep(_period);
+                    pm.ledSetOn(false);
+                    Utils.sleep(_period);
+                }
+                String[] _reply = new String[1];
+                _reply[0] = new String("Leds blinking while " + _blink + "ms with period " + _period + "ms");
+                sendToPeer(type, _reply, GUID, broadcast);
+                break;
             case CHECK:
                 System.out.println("CHECK");
                 String[] _pingReply = {PINGREPLY};

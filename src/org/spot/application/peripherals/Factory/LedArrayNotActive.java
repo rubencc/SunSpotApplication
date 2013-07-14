@@ -33,4 +33,8 @@ public class LedArrayNotActive extends LedArray {
     public String getStatus() {
         return new String(this.getName() + " " + this.NOT_ACTIVE);
     }
+
+    public boolean setOn() {
+        return false;
+    }
 }

@@ -12,8 +12,11 @@ import com.sun.spot.resources.transducers.LEDColor;
  */
 public class LedArrayActive extends LedArray {
 
+    private int number;
+
     public LedArrayActive() {
         super();
+        this.number = 0;
     }
 
     public boolean setColor(int clr) {
@@ -33,6 +36,12 @@ public class LedArrayActive extends LedArray {
 
     public boolean setOn(int bits) {
         this.leds.setOn(bits);
+        this.number = bits;
+        return true;
+    }
+
+    public boolean setOn() {
+        this.leds.setOn(number);
         return true;
     }
 

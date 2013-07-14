@@ -22,6 +22,8 @@ public interface Constans {
     public final int LED_SET_OFF = 0x47;
     public final int LED_SET_STATE = 0x48;
     public final int LED_SET_NUMBER = 0x49;
+    public final int LED_TIME = 0x4A;
+    public final int LED_BLINK = 0x4B;
     public final int CHECK = 0x50;
     public final int FEATURE = 0x60;
     public final int LIGHTSENSOR_ON = 0x61;
