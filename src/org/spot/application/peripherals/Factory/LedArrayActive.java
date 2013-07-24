@@ -16,7 +16,7 @@ public class LedArrayActive extends LedArray {
 
     public LedArrayActive() {
         super();
-        this.number = 0;
+        this.number = 255;
     }
 
     public boolean setColor(int clr) {

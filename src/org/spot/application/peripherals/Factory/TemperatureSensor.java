@@ -14,7 +14,7 @@ import com.sun.spot.resources.transducers.ITemperatureInput;
 public abstract class TemperatureSensor extends Sensor {
 
     protected ITemperatureInput tempSensor;
-    private static final String TEMPERATURE = "Temperature Sesnor";
+    private static final String TEMPERATURE = "Temperature Sensor";
     protected final String ACTIVE = "Active";
     protected final String NOT_ACTIVE = "Not Active";
     protected final String NOT_INSTALLED = "NOT INSTALLED";

@@ -14,7 +14,7 @@ import com.sun.spot.resources.transducers.ILightSensor;
 public abstract class LightSensor extends Sensor {
 
     protected ILightSensor lightSensor;
-    private static final String LIGHT = "Light Sesnor";
+    private static final String LIGHT = "Light Sensor";
     protected final String ACTIVE = "Active";
     protected final String NOT_ACTIVE = "Not Active";
     protected final String NOT_INSTALLED = "NOT INSTALLED";

@@ -288,7 +288,6 @@ public class SunSpotApplication extends MIDlet implements Constans {
             _values[i] = pDg.readUTF();
         }
         String _GUID = pDg.readUTF();
-        System.out.println("Dato recibido mediante peer:" + _type + " Valor: " + _values[0] + " GUID:" + _GUID);
         processPDU(_type, _GUID, _broadcast, _values);
         pDg.reset();
     }
