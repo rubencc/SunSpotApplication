@@ -158,7 +158,7 @@ public class PeripheralsManager {
      *
      * @return
      */
-    public boolean ledSetOff() {
+    public synchronized boolean ledSetOff() {
         return this.ledArray.setOff();
     }
 
@@ -168,7 +168,7 @@ public class PeripheralsManager {
      * @param on
      * @return
      */
-    public boolean ledSetOn(boolean on) {
+    public synchronized boolean ledSetOn(boolean on) {
         return this.ledArray.setOn(on);
     }
 
@@ -178,7 +178,7 @@ public class PeripheralsManager {
      * @param value
      * @return
      */
-    public boolean ledSetOn(int value) {
+    public synchronized boolean ledSetOn(int value) {
         return this.ledArray.setOn(value);
     }
 
@@ -187,7 +187,7 @@ public class PeripheralsManager {
      *
      * @return
      */
-    public boolean ledSetOn() {
+    public synchronized boolean ledSetOn() {
         return this.ledArray.setOn();
     }
 
@@ -197,7 +197,7 @@ public class PeripheralsManager {
      * @param color
      * @return
      */
-    public boolean ledSetColor(int color) {
+    public synchronized boolean ledSetColor(int color) {
         return this.ledArray.setColor(color);
     }
 

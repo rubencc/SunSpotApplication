@@ -19,6 +19,8 @@ import javax.microedition.io.Datagram;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import org.spot.application.Interfaces.Constans;
+import org.spot.application.peripherals.Factory.LedArrayBlink;
+import org.spot.application.peripherals.Factory.LedArrayTime;
 import org.spot.application.peripherals.Factory.PeripheralsManager;
 
 /**
@@ -370,28 +372,20 @@ public class SunSpotApplication extends MIDlet implements Constans {
             case LED_TIME:
                 System.out.println("LED TIME " + values[0]);
                 long _value = Long.parseLong(values[0]);
-                pm.ledSetOn(false);
-                pm.ledSetOn();
-                Utils.sleep(_value);
-                pm.ledSetOn(false);
+                LedArrayTime _ledTime = new LedArrayTime(_value);
+                new Thread(_ledTime).start();
                 String[] _replyTime = new String[1];
-                _replyTime[0] = new String("Leds on while " + _value + "ms");
+                _replyTime[0] = "Leds on while " + _value + "ms";
                 sendToPeer(type, _replyTime, GUID, broadcast);
                 break;
             case LED_BLINK:
                 System.out.println("LED BLINK " + values[0]);
                 long _blink = Long.parseLong(values[0]);
                 long _period = Long.parseLong(values[1]);
-                long _time = System.currentTimeMillis();
-                pm.ledSetOn(false);
-                while (System.currentTimeMillis() < (_time + _blink)) {
-                    pm.ledSetOn();
-                    Utils.sleep(_period);
-                    pm.ledSetOn(false);
-                    Utils.sleep(_period);
-                }
+                LedArrayBlink _ledBlink = new LedArrayBlink(_blink, _period);
+                new Thread(_ledBlink).start();
                 String[] _reply = new String[1];
-                _reply[0] = new String("Leds blinking while " + _blink + "ms with period " + _period + "ms");
+                _reply[0] = "Leds blinking while " + _blink + "ms with period " + _period + "ms";
                 sendToPeer(type, _reply, GUID, broadcast);
                 break;
             case CHECK:

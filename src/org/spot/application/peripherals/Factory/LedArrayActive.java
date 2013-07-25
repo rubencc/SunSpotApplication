@@ -93,6 +93,6 @@ public class LedArrayActive extends LedArray {
     }
 
     public String getStatus() {
-        return new String(this.getName() + " " + this.ACTIVE);
+        return this.getName() + " " + this.ACTIVE;
     }
 }
