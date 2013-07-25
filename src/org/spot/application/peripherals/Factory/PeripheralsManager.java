@@ -4,8 +4,6 @@
  */
 package org.spot.application.peripherals.Factory;
 
-import com.sun.spot.resources.transducers.LEDColor;
-
 /**
  *
  * @author rubencc
@@ -16,13 +14,18 @@ public class PeripheralsManager {
     private Sensor temperatureSensor;
     private LedArray ledArray;
     private Accelerometer accelerometer;
+    private static PeripheralsManager INSTANCE = new PeripheralsManager();
 
-    public PeripheralsManager() {
+    private PeripheralsManager() {
         this.lightSensor = new LightActiveSensor();
         this.temperatureSensor = new TemperatureActiveSensor();
         this.accelerometer = new AccelerometerActive();
         this.ledArray = new LedArrayActive();
         this.ledArray.setColor(9);
+    }
+
+    public static PeripheralsManager getInstance() {
+        return INSTANCE;
     }
 
     /**

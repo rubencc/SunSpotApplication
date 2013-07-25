@@ -50,7 +50,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
 
         long ourAddr = RadioFactory.getRadioPolicyManager().getIEEEAddress();
         ourAddress = IEEEAddress.toDottedHex(ourAddr);
-        pm = new PeripheralsManager();
+        pm = PeripheralsManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
         try {
             //Abre la conexion en modo servidor para recibir datos broadcast
