@@ -44,10 +44,6 @@ public class SunSpotApplication extends MIDlet implements Constans {
         pCon = PeerConnection.getInstance();
         pm = PeripheralsManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
-
-        //Abre la conexion en modo servidor para recibir datos broadcast
-
-        System.out.println("Escuchando brodascast --");
         pCon.setOurAddress(ourAddress);
         while (true) {
             if (this.bCon.packetsAvailable()) {

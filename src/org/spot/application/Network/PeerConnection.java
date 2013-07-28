@@ -59,6 +59,9 @@ public class PeerConnection {
         this.peerAddress = peerAddress;
     }
 
+    /**
+     * Conecta con el dispositivo peer indicado en peerAddress
+     */
     public synchronized void connectToPeer() {
         try {
             //Inicia una conexion peer
@@ -74,6 +77,11 @@ public class PeerConnection {
 
     }
 
+    /**
+     * Envia una PDU a traves de la conexion peer.
+     *
+     * @param pdu
+     */
     public synchronized void sendToPeer(PDU pdu) {
         try {
             String[] _values = pdu.getValues();
@@ -97,6 +105,11 @@ public class PeerConnection {
         }
     }
 
+    /**
+     * Recibe una PDU a traves de la conexion peer.
+     *
+     * @return
+     */
     public synchronized PDU readPeer() {
         PDU pdu = null;
         try {
@@ -130,6 +143,9 @@ public class PeerConnection {
         this.ourAddress = ourAddress;
     }
 
+    /**
+     * Cierra la conexion peer
+     */
     public synchronized void close() {
         try {
             this.pCon.close();
@@ -138,6 +154,11 @@ public class PeerConnection {
         }
     }
 
+    /**
+     * Comprueba si hay paquetes disposibles en caso de estar conectado al peer.
+     *
+     * @return
+     */
     public synchronized boolean packetsAvailable() {
         if (this.peerConnected) {
             return this.pCon.packetsAvailable();

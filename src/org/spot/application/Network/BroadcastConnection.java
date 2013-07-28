@@ -58,7 +58,6 @@ public class BroadcastConnection {
                 _values[i] = this.bDg.readUTF();
             }
             String _GUID = this.bDg.readUTF();
-            //processPDU(_type, _GUID, _broadcast, _values);
             this.bDg.reset();
             pdu = new PDU(_type, _GUID, _values, true, bDg.getAddress());
         } catch (IOException ex) {
@@ -67,10 +66,18 @@ public class BroadcastConnection {
         return pdu;
     }
 
+    /**
+     * Comprueba si hay paquetes disponibles en la conexion broadcast.
+     *
+     * @return
+     */
     public synchronized boolean packetsAvailable() {
         return this.bCon.packetsAvailable();
     }
 
+    /**
+     * Cierra la conexion.
+     */
     public synchronized void close() {
         try {
             this.bCon.close();
