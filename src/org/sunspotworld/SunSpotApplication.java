@@ -5,20 +5,16 @@
  */
 package org.sunspotworld;
 
-import com.sun.spot.io.j2me.radiogram.RadiogramConnection;
-import com.sun.spot.peripheral.NoRouteException;
 import com.sun.spot.peripheral.radio.RadioFactory;
-
 import com.sun.spot.util.IEEEAddress;
 import com.sun.spot.util.Utils;
 import java.io.IOException;
-import javax.microedition.io.Connector;
-import javax.microedition.io.Datagram;
-
-
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import org.spot.application.Interfaces.Constans;
+import org.spot.application.Network.BroadcastConnection;
+import org.spot.application.Network.PDU;
+import org.spot.application.Network.PeerConnection;
 import org.spot.application.peripherals.Factory.LedArrayBlink;
 import org.spot.application.peripherals.Factory.LedArrayTime;
 import org.spot.application.peripherals.Factory.PeripheralsManager;
@@ -32,19 +28,11 @@ import org.spot.application.peripherals.Factory.PeripheralsManager;
  */
 public class SunSpotApplication extends MIDlet implements Constans {
 
-    private final int BROADCAST_PORT = 66;
-    private final int PEER_PORT = 100;
-    private RadiogramConnection pCon = null;
-    private RadiogramConnection bCon = null;
-    private Datagram pDg = null;
-    private Datagram bDg = null;
-    private String peerAddress;
-    private boolean peerConnected;
-    private boolean firstBroadcast;
     private String ourAddress;
-    private final String EMPTY = "";
     private final String PINGREPLY = "Ping Reply";
     private PeripheralsManager pm;
+    private BroadcastConnection bCon;
+    private PeerConnection pCon;
 
     protected void startApp() throws MIDletStateChangeException {
 
@@ -52,57 +40,27 @@ public class SunSpotApplication extends MIDlet implements Constans {
 
         long ourAddr = RadioFactory.getRadioPolicyManager().getIEEEAddress();
         ourAddress = IEEEAddress.toDottedHex(ourAddr);
+        bCon = BroadcastConnection.getInstance();
+        pCon = PeerConnection.getInstance();
         pm = PeripheralsManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
-        try {
-            //Abre la conexion en modo servidor para recibir datos broadcast
-            bCon = (RadiogramConnection) Connector.open("radiogram://:" + BROADCAST_PORT);
-            bDg = bCon.newDatagram(bCon.getMaximumLength());
-            System.out.println("Escuchando brodascast --");
-            while (true) {
-                if (bCon.packetsAvailable()) {
-                    readBroadcast();
-                }
-                if (this.isPeerPacketsAvailable()) {
-                    readPeer();
-                }
-                Utils.sleep(1000);
+
+        //Abre la conexion en modo servidor para recibir datos broadcast
+
+        System.out.println("Escuchando brodascast --");
+        pCon.setOurAddress(ourAddress);
+        while (true) {
+            if (this.bCon.packetsAvailable()) {
+                PDU pdu = this.bCon.readBroadcast();
+                processPDU(pdu);
             }
-        } catch (NoRouteException e) {
-            System.out.println("No route to " + pDg.getAddress());
-        } catch (IOException ex) {
+            if (this.pCon.packetsAvailable()) {
+                PDU pdu = this.pCon.readPeer();
+                processPDU(pdu);
+            }
+            Utils.sleep(1000);
         }
-        notifyDestroyed();                      // cause the MIDlet to exit
-    }
-
-    /**
-     * Conecta con el peer por primera vez
-     */
-    protected void connectToPeer() {
-        try {
-            //Inicia una conexion peer
-            pCon = (RadiogramConnection) Connector.open("radiogram://" + peerAddress + ":" + PEER_PORT);
-            //pCon.setTimeout(5000);
-            pDg = pCon.newDatagram(pCon.getMaximumLength());
-            peerConnected = true;
-            System.out.println("[Spot] Conectado a: " + peerAddress);
-        } catch (IOException ex) {
-        }
-
-    }
-
-    /**
-     * Comprueba si hay datos disponibles en la conexion con el peer y si esta
-     * esta establecidapreviamente
-     *
-     * @return
-     */
-    private boolean isPeerPacketsAvailable() {
-        if (peerConnected) {
-            return pCon.packetsAvailable();
-        } else {
-            return false;
-        }
+        //notifyDestroyed();                      // cause the MIDlet to exit
     }
 
     protected void pauseApp() {
@@ -117,74 +75,24 @@ public class SunSpotApplication extends MIDlet implements Constans {
      * resources.
      */
     protected void destroyApp(boolean unconditional) throws MIDletStateChangeException {
-        try {
-            if (pCon != null) {
-                pCon.close();
-            }
-            if (bCon != null) {
-                bCon.close();
-            }
-        } catch (IOException ex) {
+        if (this.pCon != null) {
+            this.pCon.close();
+        }
+        if (bCon != null) {
+            bCon.close();
         }
     }
 
     /**
      * Responde a un paquete de PING recibido por la conexion de broadcast
      */
-    private void replyToPing() {
-
-        if (peerAddress != null && (!peerAddress.equals(bDg.getAddress()))) {
-            peerAddress = bDg.getAddress();
-            firstBroadcast = true;
-            peerConnected = false;
-            try {
-                if (pCon != null) {
-                    pCon.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            peerAddress = bDg.getAddress();
+    private void replyToPing(PDU pdu) {
+        if (this.bCon.isNewBroadcast()) {
+            this.pCon.setPeerAddress(pdu.getAddress());
+            this.pCon.connectToPeer();
+            this.bCon.setNewBroadcast(false);
         }
-        if (!peerConnected && firstBroadcast) {
-            this.connectToPeer();
-        }
-        //System.out.println("[Spot " + ourAddress + "] Ping recibido");
-        pDg.reset();
-        String[] _temp = {EMPTY};
-        sendToPeer(PING_PACKET_REPLY, _temp, "GUID", BROADCAST);
-    }
-
-    /**
-     * Envia una respuesta a traves de la conexion peer.
-     *
-     * @param type Tipo de respuesta
-     * @param value Valor de la respuesta
-     * @param GUID Identificador de la petición
-     * @param broadcast Condicion de mensaje de broadcast
-     */
-    private void sendToPeer(int type, String[] values, String GUID, boolean broadcast) {
-        try {
-            int _count = 0;
-            //System.out.print(type + " " + GUID + " " + broadcast);
-            pDg.reset();
-            /*El formato de la PDU es {direccion, tipo, valor, tiempo, guid, broadcast}*/
-            pDg.writeUTF(ourAddress);
-            pDg.writeInt(type);
-            pDg.writeInt(values.length);
-            for (int i = 0; i < values.length; i++) {
-                if (values[i] != null) {
-                    pDg.writeUTF(values[i]);
-                }
-            }
-            pDg.writeLong(System.currentTimeMillis());
-            pDg.writeUTF(GUID);
-            pDg.writeBoolean(broadcast);
-            pCon.send(pDg);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        pdu.setType(PING_PACKET_REPLY);
     }
 
     /**
@@ -251,74 +159,25 @@ public class SunSpotApplication extends MIDlet implements Constans {
     }
 
     /**
-     * Lee las PDUs de la conexion broadcast y marca las respuestas como tales
-     *
-     * @throws NumberFormatException
-     * @throws IOException
-     */
-    private void readBroadcast() throws NumberFormatException, IOException {
-        bCon.receive(bDg);
-        boolean _broadcast = BROADCAST;
-        if (!firstBroadcast) {
-            firstBroadcast = true;
-        }
-        int _type = bDg.readInt();
-        int _count = bDg.readInt();
-        String _values[] = new String[_count];
-        for (int i = 0; i < _count; i++) {
-            _values[i] = bDg.readUTF();
-        }
-
-        String _GUID = bDg.readUTF();
-        processPDU(_type, _GUID, _broadcast, _values);
-        bDg.reset();
-    }
-
-    /**
-     * Lee las PDUs de la conexion peer y marca las respuestas como tales.
-     *
-     * @throws NumberFormatException
-     * @throws IOException
-     */
-    private void readPeer() throws NumberFormatException, IOException {
-        pCon.receive(pDg);
-        boolean _broadcast = NO_BROADCAST;
-        int _type = pDg.readInt();
-        int _count = pDg.readInt();
-        String _values[] = new String[_count];
-        for (int i = 0; i < _count; i++) {
-            _values[i] = pDg.readUTF();
-        }
-        String _GUID = pDg.readUTF();
-        processPDU(_type, _GUID, _broadcast, _values);
-        pDg.reset();
-    }
-
-    /**
      * Procesa cada una de las PDUs recibidas
      *
-     * @param type Tipo de PDU
-     * @param GUID Identificador asignado a la petición
-     * @param broadcast Condicion de broadcast
-     * @param values Valor del comando
+     * @param pdu
      * @throws NumberFormatException
      * @throws IOException
      */
-    private void processPDU(int type, String GUID, boolean broadcast, String[] values) throws NumberFormatException, IOException {
-        String _temp[] = new String[1];
-        switch (type) {
+    private void processPDU(PDU pdu) {
+
+        switch (pdu.getType()) {
             case PING_PACKET_REQUEST:
-                replyToPing();
+                replyToPing(pdu);
                 break;
             case MEASURE_LIGHT:
                 System.out.println("MEASURE LIGHT ");
-                _temp[0] = this.pm.getLightMeasure();
-                sendToPeer(type, _temp, GUID, broadcast);
+                pdu.setFirsValue(this.pm.getLightMeasure());
                 break;
             case MEASURE_TEMPERATURE:
                 System.out.println("MEASURE TEMPERATURE");
-                _temp[0] = this.pm.getTemperatureMeasure();
-                sendToPeer(type, _temp, GUID, broadcast);
+                pdu.setFirsValue(this.pm.getTemperatureMeasure());
                 break;
             case MEASURE_ACCELEROMETER:
                 System.out.println("MEASURE ACCELEROMETER");
@@ -326,83 +185,87 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 _measureAccelerometer[0] = this.pm.getAcceletometerX();
                 _measureAccelerometer[1] = this.pm.getAcceletometerY();
                 _measureAccelerometer[2] = this.pm.getAcceletometerZ();
-                sendToPeer(type, _measureAccelerometer, GUID, broadcast);
+                pdu.setValues(_measureAccelerometer);
+
                 break;
             case LED_SET_COLOR:
                 System.out.println("LED SET COLOR");
-                if (this.pm.ledSetColor(Integer.parseInt(values[0]))) {
-                    _temp[0] = "Selected color";
+                if (this.pm.ledSetColor(Integer.parseInt(pdu.getValues()[0]))) {
+                    pdu.setFirsValue("Selected color");
                 } else {
-                    _temp[0] = "Error";
+                    pdu.setFirsValue("Error");
                 }
-                sendToPeer(type, _temp, GUID, broadcast);
+
                 break;
             case LED_SET_NUMBER:
                 System.out.println("LED SET NUMBER");
-                if (this.pm.ledSetOn(Integer.parseInt(values[0]))) {
-                    _temp[0] = "Leds on";
+                if (this.pm.ledSetOn(Integer.parseInt(pdu.getValues()[0]))) {
+                    pdu.setFirsValue("Leds on");
                 } else {
-                    _temp[0] = "Error";
+                    pdu.setFirsValue("Error");
                 }
-                sendToPeer(type, _temp, GUID, broadcast);
+
                 break;
             case LED_SET_OFF:
                 System.out.println("LED SET OFF");
                 if (this.pm.ledSetOff()) {
-                    _temp[0] = "All leds off";
+                    pdu.setFirsValue("All leds off");
                 } else {
-                    _temp[0] = "Error";
+                    pdu.setFirsValue("Error");
                 }
-                sendToPeer(type, _temp, GUID, broadcast);
+
                 break;
             case LED_SET_STATE:
-                System.out.println("LED SET STATE" + values[0]);
                 boolean _cond = false;
-                if (values[0].equals("true")) {
+                if (pdu.getValues()[0].equals("true")) {
                     _cond = true;
                 }
 
                 if (this.pm.ledSetOn(_cond)) {
-                    _temp[0] = "Status of the leds " + _cond;
+                    pdu.setFirsValue("Status of the leds " + _cond);
                 } else {
-                    _temp[0] = "Error";
+                    pdu.setFirsValue("Error");
                 }
-                sendToPeer(type, _temp, GUID, broadcast);
                 break;
             case LED_TIME:
-                System.out.println("LED TIME " + values[0]);
-                long _value = Long.parseLong(values[0]);
+                System.out.println("LED TIME " + pdu.getValues()[0]);
+                long _value = Long.parseLong(pdu.getValues()[0]);
                 LedArrayTime _ledTime = new LedArrayTime(_value);
                 new Thread(_ledTime).start();
-                String[] _replyTime = new String[1];
-                _replyTime[0] = "Leds on while " + _value + "ms";
-                sendToPeer(type, _replyTime, GUID, broadcast);
+                pdu.setFirsValue("Leds on while " + _value + "ms");
                 break;
             case LED_BLINK:
-                System.out.println("LED BLINK " + values[0]);
-                long _blink = Long.parseLong(values[0]);
-                long _period = Long.parseLong(values[1]);
+                System.out.println("LED BLINK " + pdu.getValues()[0]);
+                long _blink = Long.parseLong(pdu.getValues()[0]);
+                long _period = Long.parseLong(pdu.getValues()[1]);
                 LedArrayBlink _ledBlink = new LedArrayBlink(_blink, _period);
                 new Thread(_ledBlink).start();
-                String[] _reply = new String[1];
-                _reply[0] = "Leds blinking while " + _blink + "ms with period " + _period + "ms";
-                sendToPeer(type, _reply, GUID, broadcast);
+                pdu.setFirsValue("Leds blinking while " + _blink + "ms with period " + _period + "ms");
                 break;
             case CHECK:
                 System.out.println("CHECK");
-                String[] _pingReply = {PINGREPLY};
-                sendToPeer(type, _pingReply, GUID, broadcast);
+                pdu.setFirsValue(PINGREPLY);
                 break;
             case FEATURE:
                 System.out.println("FEATURES");
-                String[] _features = {configFeatures(values[0])};
-                sendToPeer(type, _features, GUID, broadcast);
+                try {
+                    pdu.setFirsValue(configFeatures(pdu.getValues()[0]));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
                 break;
             case READ_CONFIGURATION:
                 System.out.println("READ FEATURES");
-                String[] _status = this.pm.getStatus();
-                sendToPeer(type, _status, GUID, broadcast);
+                pdu.setValues(this.pm.getStatus());
                 break;
+            default:
+                pdu = null;
+                break;
+        }
+        if (pdu != null) {
+            this.pCon.sendToPeer(pdu);
         }
     }
 }
