@@ -15,9 +15,9 @@ import org.spot.application.Interfaces.Constans;
 import org.spot.application.Network.BroadcastConnection;
 import org.spot.application.Network.PDU;
 import org.spot.application.Network.PeerConnection;
-import org.spot.application.peripherals.Factory.LedArrayBlink;
-import org.spot.application.peripherals.Factory.LedArrayTime;
-import org.spot.application.peripherals.Factory.PeripheralsManager;
+import org.spot.application.Peripherals.Factory.LedArrayBlink;
+import org.spot.application.Peripherals.Factory.LedArrayTime;
+import org.spot.application.Peripherals.Factory.PeripheralsManager;
 
 /**
  * The startApp method of this class is called by the VM to start the
