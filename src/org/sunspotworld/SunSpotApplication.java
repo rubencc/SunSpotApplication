@@ -49,8 +49,8 @@ public class SunSpotApplication extends MIDlet implements Constans {
         pm = PeripheralsManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
         pCon.setOurAddress(ourAddress);
-        //lightkeeper = new LightThresholdKeeper();
-        //new Thread(lightkeeper).start();
+        lightkeeper = new LightThresholdKeeper();
+        new Thread(lightkeeper).start();
         tempkeeper = new TemperatureThresholdKeeper();
         new Thread(tempkeeper).start();
         while (true) {
