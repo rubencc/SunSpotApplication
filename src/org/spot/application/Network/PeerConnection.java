@@ -148,7 +148,9 @@ public class PeerConnection {
      */
     public synchronized void close() {
         try {
-            this.pCon.close();
+            if (this.peerConnected) {
+                this.pCon.close();
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
