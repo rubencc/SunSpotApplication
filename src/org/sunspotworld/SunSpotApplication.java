@@ -18,6 +18,8 @@ import org.spot.application.Network.PeerConnection;
 import org.spot.application.Peripherals.Factory.LedArrayBlink;
 import org.spot.application.Peripherals.Factory.LedArrayTime;
 import org.spot.application.Peripherals.Factory.PeripheralsManager;
+import org.spot.application.ThresholdKeeper.Factory.LightThresholdKeeper;
+import org.spot.application.ThresholdKeeper.Factory.TemperatureThresholdKeeper;
 
 /**
  * The startApp method of this class is called by the VM to start the
@@ -33,6 +35,8 @@ public class SunSpotApplication extends MIDlet implements Constans {
     private PeripheralsManager pm;
     private BroadcastConnection bCon;
     private PeerConnection pCon;
+    private LightThresholdKeeper lightkeeper;
+    private TemperatureThresholdKeeper tempkeeper;
 
     protected void startApp() throws MIDletStateChangeException {
 
@@ -45,6 +49,10 @@ public class SunSpotApplication extends MIDlet implements Constans {
         pm = PeripheralsManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
         pCon.setOurAddress(ourAddress);
+        //lightkeeper = new LightThresholdKeeper();
+        //new Thread(lightkeeper).start();
+        tempkeeper = new TemperatureThresholdKeeper();
+        new Thread(tempkeeper).start();
         while (true) {
             if (this.bCon.packetsAvailable()) {
                 PDU pdu = this.bCon.readBroadcast();
