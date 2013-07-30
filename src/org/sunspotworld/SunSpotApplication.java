@@ -265,12 +265,16 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LIGHT_THRESHOLD_CONFIG:
                 System.out.println("LIGHT THRESHOLD CONFIG");
-                this.keeper.setLightThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
+                if (this.pm.isLightSensorActive()) {
+                    this.keeper.setLightThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
+                }
                 pdu.setFirsValue("Light threshold configured");
                 break;
             case TEMPERATURE_THRESHOLD_CONFIG:
                 System.out.println("TEMPERATURE THRESHOLD CONFIG");
-                this.keeper.setTemperatureThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
+                if (this.pm.isTemperatureSensorActive()) {
+                    this.keeper.setTemperatureThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
+                }
                 pdu.setFirsValue("Temperature threshold configured");
                 break;
             default:
@@ -290,20 +294,36 @@ public class SunSpotApplication extends MIDlet implements Constans {
     private void thresholdManager(PDU pdu) {
         switch (Integer.parseInt(pdu.getValues()[0])) {
             case LIGHT_THRESHOLD_ON:
-                this.keeper.launchLightThresholdKeeper();
-                pdu.setFirsValue("Light Threshold Keeper ON");
+                if (this.pm.isLightSensorActive()) {
+                    this.keeper.launchLightThresholdKeeper();
+                    pdu.setFirsValue("Light Threshold Keeper ON");
+                } else {
+                    pdu.setFirsValue(this.pm.getLightMeasure());
+                }
                 break;
             case LIGHT_THRESHOLD_OFF:
-                this.keeper.stopLightThresholdKeeper();
-                pdu.setFirsValue("Light Threshold Keeper OFF");
+                if (this.pm.isLightSensorActive()) {
+                    this.keeper.stopLightThresholdKeeper();
+                    pdu.setFirsValue("Light Threshold Keeper OFF");
+                } else {
+                    pdu.setFirsValue(this.pm.getLightMeasure());
+                }
                 break;
             case TEMPERATURE_THRESHOLD_ON:
-                this.keeper.launchTemperatureThresholdKeeper();
-                pdu.setFirsValue("Temperature Threshold Keeper ON");
+                if (this.pm.isTemperatureSensorActive()) {
+                    this.keeper.launchTemperatureThresholdKeeper();
+                    pdu.setFirsValue("Temperature Threshold Keeper ON");
+                } else {
+                    pdu.setFirsValue(this.pm.getTemperatureMeasure());
+                }
                 break;
             case TEMPERATURE_THRESHOLD_OFF:
-                this.keeper.stopTemperatureThresholdKeeper();
-                pdu.setFirsValue("Temperature Threshold Keeper OFF");
+                if (this.pm.isTemperatureSensorActive()) {
+                    this.keeper.stopTemperatureThresholdKeeper();
+                    pdu.setFirsValue("Temperature Threshold Keeper OFF");
+                } else {
+                    pdu.setFirsValue(this.pm.getTemperatureMeasure());
+                }
                 break;
         }
     }

@@ -20,9 +20,11 @@ public class LedArrayTime implements Runnable {
     }
 
     public void run() {
-        pm.ledSetOn(false);
-        pm.ledSetOn();
-        Utils.sleep(this.value);
-        pm.ledSetOn(false);
+        if (this.pm.isLedArrayActive()) {
+            this.pm.ledSetOn(false);
+            this.pm.ledSetOn();
+            Utils.sleep(this.value);
+            this.pm.ledSetOn(false);
+        }
     }
 }

@@ -14,6 +14,7 @@ public class NotTemperatureSensor extends TemperatureSensor {
 
     public NotTemperatureSensor() {
         super();
+        this.setActive(false);
     }
 
     public String getMeasure() {

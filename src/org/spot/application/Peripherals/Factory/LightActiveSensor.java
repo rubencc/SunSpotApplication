@@ -14,6 +14,7 @@ public class LightActiveSensor extends LightSensor {
 
     public LightActiveSensor() {
         super();
+        this.setActive(true);
     }
 
     public String getMeasure() {

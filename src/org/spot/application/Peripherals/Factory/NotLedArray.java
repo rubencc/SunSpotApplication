@@ -12,6 +12,7 @@ public class NotLedArray extends LedArray {
 
     public NotLedArray() {
         super();
+        this.setActive(false);
     }
 
     public boolean setColor(int clr) {

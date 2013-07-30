@@ -209,4 +209,16 @@ public class PeripheralsManager {
         _status[3] = this.ledArray.getStatus();
         return _status;
     }
+
+    public boolean isLightSensorActive() {
+        return this.lightSensor.isActive();
+    }
+
+    public boolean isTemperatureSensorActive() {
+        return this.temperatureSensor.isActive();
+    }
+
+    public boolean isLedArrayActive() {
+        return this.ledArray.isActive();
+    }
 }

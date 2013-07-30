@@ -33,7 +33,7 @@ public class LightThresholdKeeper extends ThresholdKeeper {
 
     public void run() {
         this.runCond = true;
-        while (this.runCond) {
+        while (this.runCond && this.sensor.isLightSensorActive() && this.sensor.isLedArrayActive()) {
             int _value = Integer.parseInt(this.sensor.getLightMeasure());
             if (_value > this.getMaxValue()) {
                 this.sensor.ledSetOn(ABOVEWARNING);
@@ -49,6 +49,7 @@ public class LightThresholdKeeper extends ThresholdKeeper {
             }
             Utils.sleep(PERIOD);
         }
+        this.sensor.ledSetOff();
     }
 
     public String getName() {

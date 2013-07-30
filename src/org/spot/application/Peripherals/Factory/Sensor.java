@@ -23,4 +23,6 @@ public abstract class Sensor implements ISensor {
     public String getName() {
         return this.sensorName;
     }
+
+    public abstract boolean isActive();
 }

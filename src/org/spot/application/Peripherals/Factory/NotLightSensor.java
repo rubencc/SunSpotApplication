@@ -14,6 +14,7 @@ public class NotLightSensor extends LightSensor {
 
     public NotLightSensor() {
         super();
+        this.setActive(false);
     }
 
     public String getMeasure() {

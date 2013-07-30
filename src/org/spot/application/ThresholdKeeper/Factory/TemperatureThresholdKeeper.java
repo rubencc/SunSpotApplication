@@ -32,8 +32,9 @@ public class TemperatureThresholdKeeper extends ThresholdKeeper {
     }
 
     public void run() {
+
         this.runCond = true;
-        while (this.runCond) {
+        while (this.runCond && this.sensor.isTemperatureSensorActive() && this.sensor.isLedArrayActive()) {
             double _value = Double.parseDouble(this.sensor.getTemperatureMeasure());
             if (_value > this.getMaxValue()) {
                 this.sensor.ledSetOn(ABOVEWARNING);
@@ -49,6 +50,7 @@ public class TemperatureThresholdKeeper extends ThresholdKeeper {
             }
             Utils.sleep(PERIOD);
         }
+        this.sensor.ledSetOff();
     }
 
     public String getName() {

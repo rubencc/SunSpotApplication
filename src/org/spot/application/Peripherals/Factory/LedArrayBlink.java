@@ -23,13 +23,15 @@ public class LedArrayBlink implements Runnable {
     }
 
     public void run() {
-        this.time = System.currentTimeMillis();
-        pm.ledSetOn(false);
-        while (System.currentTimeMillis() < (this.time + this.blink)) {
-            pm.ledSetOn();
-            Utils.sleep(this.period);
-            pm.ledSetOn(false);
-            Utils.sleep(this.period);
+        if (this.pm.isLedArrayActive()) {
+            this.time = System.currentTimeMillis();
+            this.pm.ledSetOn(false);
+            while (System.currentTimeMillis() < (this.time + this.blink)) {
+                this.pm.ledSetOn();
+                Utils.sleep(this.period);
+                this.pm.ledSetOn(false);
+                Utils.sleep(this.period);
+            }
         }
     }
 }
