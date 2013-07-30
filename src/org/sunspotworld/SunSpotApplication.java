@@ -18,8 +18,7 @@ import org.spot.application.Network.PeerConnection;
 import org.spot.application.Peripherals.Factory.LedArrayBlink;
 import org.spot.application.Peripherals.Factory.LedArrayTime;
 import org.spot.application.Peripherals.Factory.PeripheralsManager;
-import org.spot.application.ThresholdKeeper.Factory.LightThresholdKeeper;
-import org.spot.application.ThresholdKeeper.Factory.TemperatureThresholdKeeper;
+import org.spot.application.ThresholdKeeper.Factory.ThresholdManager;
 
 /**
  * The startApp method of this class is called by the VM to start the
@@ -35,8 +34,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
     private PeripheralsManager pm;
     private BroadcastConnection bCon;
     private PeerConnection pCon;
-    private LightThresholdKeeper lightkeeper;
-    private TemperatureThresholdKeeper tempkeeper;
+    private ThresholdManager keeper;
 
     protected void startApp() throws MIDletStateChangeException {
 
@@ -49,10 +47,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
         pm = PeripheralsManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
         pCon.setOurAddress(ourAddress);
-        lightkeeper = new LightThresholdKeeper();
-        new Thread(lightkeeper).start();
-        tempkeeper = new TemperatureThresholdKeeper();
-        new Thread(tempkeeper).start();
+        keeper = ThresholdManager.getInstance();
         while (true) {
             if (this.bCon.packetsAvailable()) {
                 PDU pdu = this.bCon.readBroadcast();
@@ -264,12 +259,52 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 System.out.println("READ FEATURES");
                 pdu.setValues(this.pm.getStatus());
                 break;
+            case THRESHOLD_FEATURE:
+                System.out.println("THRESHOLD FEATURE");
+                thresholdManager(pdu);
+                break;
+            case LIGHT_THRESHOLD_CONFIG:
+                System.out.println("LIGHT THRESHOLD CONFIG");
+                this.keeper.setLightThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
+                pdu.setFirsValue("Light threshold configured");
+                break;
+            case TEMPERATURE_THRESHOLD_CONFIG:
+                System.out.println("TEMPERATURE THRESHOLD CONFIG");
+                this.keeper.setTemperatureThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
+                pdu.setFirsValue("Temperature threshold configured");
+                break;
             default:
                 pdu = null;
                 break;
         }
         if (pdu != null) {
             this.pCon.sendToPeer(pdu);
+        }
+    }
+
+    /**
+     * Activa o desactiva la ejecucion de los hilos de vigilancia de umbrales.
+     *
+     * @param pdu
+     */
+    private void thresholdManager(PDU pdu) {
+        switch (Integer.parseInt(pdu.getValues()[0])) {
+            case LIGHT_THRESHOLD_ON:
+                this.keeper.launchLightThresholdKeeper();
+                pdu.setFirsValue("Light Threshold Keeper ON");
+                break;
+            case LIGHT_THRESHOLD_OFF:
+                this.keeper.stopLightThresholdKeeper();
+                pdu.setFirsValue("Light Threshold Keeper OFF");
+                break;
+            case TEMPERATURE_THRESHOLD_ON:
+                this.keeper.launchTemperatureThresholdKeeper();
+                pdu.setFirsValue("Temperature Threshold Keeper ON");
+                break;
+            case TEMPERATURE_THRESHOLD_OFF:
+                this.keeper.stopTemperatureThresholdKeeper();
+                pdu.setFirsValue("Temperature Threshold Keeper OFF");
+                break;
         }
     }
 }

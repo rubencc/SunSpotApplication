@@ -32,6 +32,7 @@ public class LightThresholdKeeper extends ThresholdKeeper {
     }
 
     public void run() {
+        this.runCond = true;
         while (this.runCond) {
             int _value = Integer.parseInt(this.sensor.getLightMeasure());
             if (_value > this.getMaxValue()) {

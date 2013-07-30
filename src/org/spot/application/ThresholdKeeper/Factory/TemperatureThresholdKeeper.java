@@ -32,6 +32,7 @@ public class TemperatureThresholdKeeper extends ThresholdKeeper {
     }
 
     public void run() {
+        this.runCond = true;
         while (this.runCond) {
             double _value = Double.parseDouble(this.sensor.getTemperatureMeasure());
             if (_value > this.getMaxValue()) {
