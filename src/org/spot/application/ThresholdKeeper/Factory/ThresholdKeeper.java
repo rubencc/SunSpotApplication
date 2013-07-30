@@ -72,5 +72,6 @@ abstract class ThresholdKeeper implements Runnable {
 
     public void finish() {
         this.runCond = false;
+        this.sensor.ledSetOff();
     }
 }

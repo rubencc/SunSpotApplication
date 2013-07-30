@@ -53,6 +53,6 @@ public class ThresholdManager {
         this.temperature.setMaxValue(maxValue);
         this.temperature.setMinValue(minValue);
         this.temperature.setPeriod(period);
-        new Thread(this.light).start();
+        new Thread(this.temperature).start();
     }
 }
