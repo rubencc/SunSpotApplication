@@ -146,10 +146,12 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 _temp = "LedArray ON";
                 break;
             case LEDARRAY_OFF:
+                this.pm.ledSetOff();
                 this.pm.setLedArrayStatus("off");
                 _temp = "LedArray OFF";
                 break;
             case LED_ARRAY_NOT_PRESENT:
+                this.pm.ledSetOff();
                 this.pm.setLedArrayStatus("notprenset");
                 _temp = "LedArray unavailable";
                 break;
@@ -225,6 +227,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 } else {
                     pdu.setFirsValue("Error");
                 }
+                System.out.println("LED SET " + _cond);
                 break;
             case LED_TIME:
                 System.out.println("LED TIME " + pdu.getValues()[0]);

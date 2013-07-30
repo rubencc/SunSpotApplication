@@ -34,7 +34,7 @@ public class TemperatureThresholdKeeper extends ThresholdKeeper {
     public void run() {
 
         this.runCond = true;
-        while (this.runCond && this.sensor.isTemperatureSensorActive() && this.sensor.isLedArrayActive()) {
+        while (this.runCond && this.sensor.isTemperatureSensorActive()) {
             double _value = Double.parseDouble(this.sensor.getTemperatureMeasure());
             if (_value > this.getMaxValue()) {
                 this.sensor.ledSetOn(ABOVEWARNING);
