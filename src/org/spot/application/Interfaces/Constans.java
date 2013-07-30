@@ -10,6 +10,7 @@ package org.spot.application.Interfaces;
  */
 public interface Constans {
 
+    public final int QUEUE_ALERT = 0x20;
     public final int PING_PACKET_REQUEST = 0x30;
     public final int PING_PACKET_REPLY = 0x33;
     public final int MEASURE_LIGHT = 0x40;

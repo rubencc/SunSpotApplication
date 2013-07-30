@@ -4,6 +4,7 @@
  */
 package org.spot.application.ThresholdKeeper.Factory;
 
+import org.spot.application.Network.PeerConnection;
 import org.spot.application.Peripherals.Factory.PeripheralsManager;
 
 /**
@@ -17,9 +18,12 @@ abstract class ThresholdKeeper implements Runnable {
     private int maxValue;
     protected boolean runCond;
     protected PeripheralsManager sensor;
+    protected PeerConnection pCon;
+    protected final int QUEUE_ALERT = 0x20;
 
     public ThresholdKeeper() {
         this.sensor = PeripheralsManager.getInstance();
+        this.pCon = PeerConnection.getInstance();
         this.runCond = true;
     }
 
