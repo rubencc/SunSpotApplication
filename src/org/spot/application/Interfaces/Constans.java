@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Interfaces;
 
 /**
+ * Constantes para los tipos y valores contenidos en las PDUs
  *
  * @author rubencc
  */
