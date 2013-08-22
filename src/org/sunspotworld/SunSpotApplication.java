@@ -18,7 +18,7 @@ import org.spot.application.Network.PeerConnection;
 import org.spot.application.Peripherals.Factory.LedArrayBlink;
 import org.spot.application.Peripherals.Factory.LedArrayTime;
 import org.spot.application.Peripherals.Factory.PeripheralsManager;
-import org.spot.application.ThresholdKeeper.Factory.ThresholdManager;
+import org.spot.application.ThresholdKeeper.ThresholdManager;
 
 /**
  * The startApp method of this class is called by the VM to start the
