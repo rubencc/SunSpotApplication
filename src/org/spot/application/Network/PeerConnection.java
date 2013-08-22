@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Network;
 
 import com.sun.spot.io.j2me.radiogram.RadiogramConnection;
@@ -10,17 +6,25 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.Datagram;
 
 /**
+ * Clase de instancia unica para el envio y recepcion de mensajes en modo peer
  *
  * @author rubencc
  */
 public class PeerConnection {
 
+    //Puerto de la conexión peer
     private final int PEER_PORT = 100;
+    //Conexión peer
     private RadiogramConnection pCon = null;
+    //Datagrama
     private Datagram pDg = null;
+    //Condición de conectado con el peer
     private boolean peerConnected;
+    //Dirección del peer
     private String peerAddress;
+    //Instancia de la clase
     private static PeerConnection INSTANCE = new PeerConnection();
+    //Dirección del dispostivo
     private String ourAddress;
 
     private PeerConnection() {
@@ -32,31 +36,57 @@ public class PeerConnection {
     }
 
     /**
-     * @return the peerConnected
+     * Informa si el dispostivio esta conectado al peer
+     *
+     * @return condición
      */
     public synchronized boolean isPeerConnected() {
         return peerConnected;
     }
 
     /**
-     * @return the peerAddress
+     * Establece el estado de la conexión con el peer
+     *
+     * @param condition
+     */
+    public synchronized void setPeerConnected(boolean condition) {
+        this.peerConnected = condition;
+    }
+
+    /**
+     * Devuelve la dirección de red del peer
+     *
+     * @return Dirección de red
      */
     public synchronized String getPeerAddress() {
         return peerAddress;
     }
 
     /**
-     * @param peerConnected the peerConnected to set
-     */
-    public synchronized void setPeerConnected(boolean peerConnected) {
-        this.peerConnected = peerConnected;
-    }
-
-    /**
-     * @param peerAddress the peerAddress to set
+     * Establece la direccion del peer
+     *
+     * @param peerAddress -- Dirección de red
      */
     public synchronized void setPeerAddress(String peerAddress) {
         this.peerAddress = peerAddress;
+    }
+
+    /**
+     * Devuelve la dirección de red del dispostivo
+     *
+     * @return Dirección de red
+     */
+    public synchronized String getOurAddress() {
+        return ourAddress;
+    }
+
+    /**
+     * Establece la direccion de red del dispostivo
+     *
+     * @param ourAddress -- Dirección de red
+     */
+    public synchronized void setOurAddress(String ourAddress) {
+        this.ourAddress = ourAddress;
     }
 
     /**
@@ -73,14 +103,12 @@ public class PeerConnection {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
-
     }
 
     /**
      * Envia una PDU a traves de la conexion peer.
      *
-     * @param pdu
+     * @param PDU
      */
     public synchronized void sendToPeer(PDU pdu) {
         try {
@@ -108,7 +136,7 @@ public class PeerConnection {
     /**
      * Recibe una PDU a traves de la conexion peer.
      *
-     * @return
+     * @return PDU
      */
     public synchronized PDU readPeer() {
         PDU pdu = null;
@@ -127,20 +155,6 @@ public class PeerConnection {
             ex.printStackTrace();
         }
         return pdu;
-    }
-
-    /**
-     * @return the ourAddress
-     */
-    public synchronized String getOurAddress() {
-        return ourAddress;
-    }
-
-    /**
-     * @param ourAddress the ourAddress to set
-     */
-    public synchronized void setOurAddress(String ourAddress) {
-        this.ourAddress = ourAddress;
     }
 
     /**

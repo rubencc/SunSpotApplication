@@ -15,12 +15,17 @@ import javax.microedition.io.Datagram;
  */
 public class BroadcastConnection {
 
+    //Puerto para la conexion broadcast
     private final int BROADCAST_PORT = 66;
+    //Conexión broadcast
     private RadiogramConnection bCon = null;
+    //Datagrama
     private Datagram bDg = null;
+    //Condición de nuevo host application
     private boolean newBroadcast = false;
-    private String peerAddress = null;
-    private final String PINGREPLY = "Ping Reply";
+    //Dirección de red del emisor broadcast
+    private String senderAddress = null;
+    //Instnacia de la clase
     private static BroadcastConnection INSTANCE = new BroadcastConnection();
 
     private BroadcastConnection() {
@@ -40,16 +45,15 @@ public class BroadcastConnection {
     /**
      * Lee las PDUs de la conexion broadcast y marca las respuestas como tales
      *
-     * @throws NumberFormatException
-     * @throws IOException
+     * @return PDU
      */
     public synchronized PDU readBroadcast() {
         PDU pdu = null;
         try {
             this.bCon.receive(bDg);
-            if (this.peerAddress == null || !this.peerAddress.equals(bDg.getAddress())) {
+            if (this.senderAddress == null || !this.senderAddress.equals(bDg.getAddress())) {
                 this.newBroadcast = true;
-                this.peerAddress = bDg.getAddress();
+                this.senderAddress = bDg.getAddress();
             }
             int _type = this.bDg.readInt();
             int _count = this.bDg.readInt();
@@ -87,23 +91,32 @@ public class BroadcastConnection {
     }
 
     /**
-     * @return the firstBroadcast
+     * Devuelve la condicion de nuevo host application enviando a traves de la
+     * conexión broadcast
+     *
+     * @return
      */
     public synchronized boolean isNewBroadcast() {
         return this.newBroadcast;
     }
 
     /**
-     * @param firstBroadcast the firstBroadcast to set
+     * Establece la condición de nuevo host application enviando a traves de la
+     * conexión broadcast
+     *
+     * @param condition
      */
-    public synchronized void setNewBroadcast(boolean cond) {
-        this.newBroadcast = cond;
+    public synchronized void setNewBroadcast(boolean condition) {
+        this.newBroadcast = condition;
     }
 
     /**
-     * @return the peerAddress
+     * Obtiene la dirección de red del host application que usa esta conexión
+     * broadcast
+     *
+     * @return Dirección de red del
      */
-    public synchronized String getPeerAddress() {
-        return peerAddress;
+    public synchronized String getSenderAddress() {
+        return senderAddress;
     }
 }
