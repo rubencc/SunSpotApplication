@@ -40,23 +40,31 @@ public class SunSpotApplication extends MIDlet implements Constans {
 
         //BootloaderListenerService.getInstance().start();   // monitor the USB (if connected) and recognize commands from host
 
+        //Direccion de red del dispositivo
         long ourAddr = RadioFactory.getRadioPolicyManager().getIEEEAddress();
         ourAddress = IEEEAddress.toDottedHex(ourAddr);
+        //Conexión broadcast con el host application
         bCon = BroadcastConnection.getInstance();
+        //Conexión peer con el host application
         pCon = PeerConnection.getInstance();
+        //Gestor de perifericos
         pm = PeripheralsManager.getInstance();
+        //Gestor de umbrales
+        keeper = ThresholdManager.getInstance();
         System.out.println("Direccion de red = " + ourAddress);
         pCon.setOurAddress(ourAddress);
-        keeper = ThresholdManager.getInstance();
         while (true) {
+            //Lee paquetes provenientes de la conexion broadcast
             if (this.bCon.packetsAvailable()) {
                 PDU pdu = this.bCon.readBroadcast();
                 processPDU(pdu);
             }
+            //Lee paquetes provenientes de la conexion peer
             if (this.pCon.packetsAvailable()) {
                 PDU pdu = this.pCon.readPeer();
                 processPDU(pdu);
             }
+            //Duerme la ejecucion del hilo principal, en milisegundos.
             Utils.sleep(1000);
         }
         //notifyDestroyed();                      // cause the MIDlet to exit
@@ -101,7 +109,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
      * @throws IOException
      * @throws NumberFormatException
      */
-    private String configFeatures(String value) throws IOException, NumberFormatException {
+    private String configFeatures(String value) {
 
         String _temp = null;
         switch (Integer.parseInt(value)) {
@@ -250,13 +258,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case FEATURE:
                 System.out.println("FEATURES");
-                try {
-                    pdu.setFirsValue(configFeatures(pdu.getValues()[0]));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
+                pdu.setFirsValue(configFeatures(pdu.getValues()[0]));
                 break;
             case READ_CONFIGURATION:
                 System.out.println("READ FEATURES");
