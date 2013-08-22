@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import com.sun.spot.resources.Resources;
 import com.sun.spot.resources.transducers.ILightSensor;
 
 /**
+ * Clase que implementa las funcionalidades del sensor de luz
  *
  * @author rubencc
  */

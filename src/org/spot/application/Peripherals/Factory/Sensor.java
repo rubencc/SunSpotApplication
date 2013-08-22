@@ -1,12 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import org.spot.application.Interfaces.ISensor;
 
 /**
+ * Clase abstracta que implementa los metodos para las funcionalidades de los
+ * sensores de luz y temperatura
  *
  * @author rubencc
  */
@@ -18,11 +16,26 @@ public abstract class Sensor implements ISensor {
         this.sensorName = name;
     }
 
+    /**
+     * Devuelve la medida del sensor
+     *
+     * @return valor medido
+     */
     public abstract String getMeasure();
 
+    /**
+     * Devuelve el nombre del periferico
+     *
+     * @return
+     */
     public String getName() {
         return this.sensorName;
     }
 
+    /**
+     * Devuelve el estado de actividad del periferico
+     *
+     * @return
+     */
     public abstract boolean isActive();
 }

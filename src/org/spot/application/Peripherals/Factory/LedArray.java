@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import com.sun.spot.resources.Resources;
@@ -9,6 +5,7 @@ import com.sun.spot.resources.transducers.ITriColorLEDArray;
 import org.spot.application.Interfaces.ILed;
 
 /**
+ * Clase abstracta para la gestion de las funcionalidades del array de leds
  *
  * @author rubencc
  */
@@ -28,16 +25,50 @@ public abstract class LedArray implements ILed {
         this.active = false;
     }
 
+    /**
+     * Selecciona el color que muestra el array de leds
+     *
+     * @param clr -- Valor del color
+     * @return
+     */
     public abstract boolean setColor(int clr);
 
+    /**
+     * Apaga los leds y elimina parte de la configuración
+     *
+     * @return
+     */
     public abstract boolean setOff();
 
-    public abstract boolean setOn(boolean on);
+    /**
+     * Selecciona el estado de los leds (on/off) sin eliminar la configuración
+     *
+     * @param condition
+     * @return
+     */
+    public abstract boolean setOn(boolean condition);
 
+    /**
+     * Selecciona el valor que se va a mostrar en el array de leds
+     *
+     * @param bits
+     * @return
+     */
     public abstract boolean setOn(int bits);
 
+    /**
+     * Activa los leds con el valor a mostrar por defecto o el ultimo que se
+     * haya configurado
+     *
+     * @return
+     */
     public abstract boolean setOn();
 
+    /**
+     * Devuelve el nombre del dispostivo
+     *
+     * @return
+     */
     public String getName() {
         return this.name;
     }
@@ -45,16 +76,20 @@ public abstract class LedArray implements ILed {
     public abstract String getStatus();
 
     /**
-     * @return the active
+     * Devuelve el estado de actividad del array de leds
+     *
+     * @return Estado del array de leds
      */
     public boolean isActive() {
         return active;
     }
 
     /**
-     * @param active the active to set
+     * Marca si el array de leds esta activo o no
+     *
+     * @param condition -- Condición de actividad
      */
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setActive(boolean condition) {
+        this.active = condition;
     }
 }

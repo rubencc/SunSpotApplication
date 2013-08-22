@@ -1,12 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import com.sun.spot.util.Utils;
 
 /**
+ * Clase que provee de la funcionalidad de activar el array de leds durante un
+ * tiempo determinado Se ejecuta en un hilo independiente
  *
  * @author rubencc
  */

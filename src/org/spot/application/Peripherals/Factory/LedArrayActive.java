@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import com.sun.spot.resources.transducers.LEDColor;
 
 /**
+ * Clase que modela el comportamiento del array de leds cuando esta activo
  *
  * @author rubencc
  */

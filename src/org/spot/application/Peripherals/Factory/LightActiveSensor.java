@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import java.io.IOException;
 
 /**
+ * Clase que modela el comportamiento del sensor de luz cuando esta activo
  *
  * @author rubencc
  */

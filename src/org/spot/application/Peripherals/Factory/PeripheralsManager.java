@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 /**
+ * Clase que encapsula la gestion y el comportamiento de los perifericos
  *
  * @author rubencc
  */
@@ -29,7 +26,7 @@ public class PeripheralsManager {
     }
 
     /**
-     * Especifica el estado de los sensores de luz.
+     * Configura el estado de los sensores de luz.
      *
      * @param state "on","off","notpresent"
      */
@@ -50,7 +47,7 @@ public class PeripheralsManager {
     }
 
     /**
-     * Especifica el estado de los sensores de temperatura.
+     * Configura el estado de los sensores de temperatura.
      *
      * @param state "on","off","notpresent"
      */
@@ -71,7 +68,7 @@ public class PeripheralsManager {
     }
 
     /**
-     * Especifica el estado del acelerometro.
+     * Configura el estado del acelerometro.
      *
      * @param state
      */
@@ -90,7 +87,7 @@ public class PeripheralsManager {
     }
 
     /**
-     * Especifica el estado del array de leds.
+     * Configura el estado del array de leds.
      *
      * @param state
      */
@@ -210,14 +207,29 @@ public class PeripheralsManager {
         return _status;
     }
 
+    /**
+     * Devuelve el estado de actividad del sensor de luz
+     *
+     * @return
+     */
     public boolean isLightSensorActive() {
         return this.lightSensor.isActive();
     }
 
+    /**
+     * Devuelve el estado de actividad del sensor de temperatura
+     *
+     * @return
+     */
     public boolean isTemperatureSensorActive() {
         return this.temperatureSensor.isActive();
     }
 
+    /**
+     * Devuelve el estado de actividad del array de leds
+     *
+     * @return
+     */
     public boolean isLedArrayActive() {
         return this.ledArray.isActive();
     }

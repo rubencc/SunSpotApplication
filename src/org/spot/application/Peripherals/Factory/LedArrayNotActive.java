@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 /**
+ * Clase que modela el comportamiento del array de leds cuando no esta activo
  *
  * @author rubencc
  */

@@ -1,12 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.Peripherals.Factory;
 
 import java.io.IOException;
 
 /**
+ * Clase que mopdela el comportamiento del sensor de temperatura cuando esta
+ * activo
  *
  * @author rubencc
  */
