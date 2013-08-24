@@ -30,9 +30,7 @@ public class LedArrayBlink implements Runnable {
                 this.pm.ledSetOn(false);
                 Utils.sleep(this.period);
             }
-            if (this.pm.hasANumber()) {
-                this.pm.ledSetOn();
-            }
+            this.pm.ledSetOn(false);
         }
     }
 }
