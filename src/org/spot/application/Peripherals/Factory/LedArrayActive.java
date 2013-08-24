@@ -17,6 +17,14 @@ public class LedArrayActive extends LedArray {
         this.setActive(true);
     }
 
+    public boolean hasANumber() {
+        boolean _result = false;
+        if (this.number != 0) {
+            _result = true;
+        }
+        return _result;
+    }
+
     public boolean setColor(int clr) {
         this.leds.setColor(this.selectColor(clr));
         return true;

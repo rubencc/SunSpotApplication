@@ -35,4 +35,8 @@ public class LedArrayNotActive extends LedArray {
     public boolean setOn() {
         return false;
     }
+
+    public boolean hasANumber() {
+        return false;
+    }
 }

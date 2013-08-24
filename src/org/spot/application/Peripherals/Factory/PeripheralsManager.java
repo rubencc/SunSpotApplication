@@ -189,6 +189,15 @@ public class PeripheralsManager {
     }
 
     /**
+     * Indica si el array de leds esta mostrando algun numero
+     *
+     * @return
+     */
+    public synchronized boolean hasANumber() {
+        return this.ledArray.hasANumber();
+    }
+
+    /**
      * Establece el color de los leds.
      *
      * @param color

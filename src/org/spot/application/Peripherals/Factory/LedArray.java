@@ -26,6 +26,13 @@ public abstract class LedArray implements ILed {
     }
 
     /**
+     * Indica si el array de leds esta mostrando algun numero
+     *
+     * @return
+     */
+    public abstract boolean hasANumber();
+
+    /**
      * Selecciona el color que muestra el array de leds
      *
      * @param clr -- Valor del color
