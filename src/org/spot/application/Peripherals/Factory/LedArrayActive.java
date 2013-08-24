@@ -13,7 +13,7 @@ public class LedArrayActive extends LedArray {
 
     public LedArrayActive() {
         super();
-        this.number = 255;
+        this.number = 0;
         this.setActive(true);
     }
 
