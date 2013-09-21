@@ -30,6 +30,7 @@ public class ThresholdManager {
      * Lanza la ejecución del hilo vigilante del umbral de luz
      */
     public void launchLightThresholdKeeper() {
+        this.light.setRunning(true);
         new Thread(this.light).start();
     }
 
@@ -37,6 +38,7 @@ public class ThresholdManager {
      * Lanza la ejecución del hilo vigilante del umbral de temperatura
      */
     public void launchTemperatureThresholdKeeper() {
+        this.temperature.setRunning(true);
         new Thread(this.temperature).start();
     }
 
@@ -44,6 +46,7 @@ public class ThresholdManager {
      * Detiene la ejecución del hilo vigilante del umbral de luz
      */
     public void stopLightThresholdKeeper() {
+        this.light.setRunning(false);
         this.light.finish();
     }
 
@@ -51,6 +54,7 @@ public class ThresholdManager {
      * Detiene la ejecución del hilo vigilante del umbral de temperatura
      */
     public void stopTemperatureThresholdKeeper() {
+        this.temperature.setRunning(false);
         this.temperature.finish();
     }
 
@@ -61,11 +65,12 @@ public class ThresholdManager {
      * @param minValue -- Valor minimo del umbral
      * @param period -- Perido de toma de medidas
      */
-    public void setLightThresholdKeeper(int maxValue, int minValue, long period) {
+    public void setLightThresholdKeeper(double maxValue, double minValue, long period) {
         this.light.finish();
         this.light.setMaxValue(maxValue);
         this.light.setMinValue(minValue);
         this.light.setPeriod(period);
+        this.light.setRunning(true);
         new Thread(this.light).start();
     }
 
@@ -76,11 +81,30 @@ public class ThresholdManager {
      * @param minValue -- Valor minimo del umbral
      * @param period -- Perido de toma de medidas
      */
-    public void setTemperatureThresholdKeeper(int maxValue, int minValue, long period) {
+    public void setTemperatureThresholdKeeper(double maxValue, double minValue, long period) {
         this.temperature.finish();
         this.temperature.setMaxValue(maxValue);
         this.temperature.setMinValue(minValue);
         this.temperature.setPeriod(period);
+        this.temperature.setRunning(true);
         new Thread(this.temperature).start();
+    }
+
+    /**
+     * Devuelve el estado del hilo vigilante de la temperatura
+     *
+     * @return
+     */
+    public String[] getStatusTemperatureThresholdKeeper() {
+        return this.temperature.getStatus();
+    }
+
+    /**
+     * Devuelve el estado del hilo vigilante de la luz
+     *
+     * @return
+     */
+    public String[] getStatusLightThresholdKeeperr() {
+        return this.light.getStatus();
     }
 }

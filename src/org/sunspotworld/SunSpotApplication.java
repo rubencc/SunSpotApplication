@@ -160,7 +160,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LED_ARRAY_NOT_PRESENT:
                 this.pm.ledSetOff();
-                this.pm.setLedArrayStatus("notprenset");
+                this.pm.setLedArrayStatus("notpresent");
                 _temp = "LedArray unavailable";
                 break;
         }
@@ -190,12 +190,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case MEASURE_ACCELEROMETER:
                 System.out.println("MEASURE ACCELEROMETER");
-                String _measureAccelerometer[] = new String[3];
-                _measureAccelerometer[0] = this.pm.getAcceletometerX();
-                _measureAccelerometer[1] = this.pm.getAcceletometerY();
-                _measureAccelerometer[2] = this.pm.getAcceletometerZ();
-                pdu.setValues(_measureAccelerometer);
-
+                getMeassureAccelerometer(pdu);
                 break;
             case LED_SET_COLOR:
                 System.out.println("LED SET COLOR");
@@ -239,18 +234,11 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LED_TIME:
                 System.out.println("LED TIME " + pdu.getValues()[0]);
-                long _value = Long.parseLong(pdu.getValues()[0]);
-                LedArrayTime _ledTime = new LedArrayTime(_value);
-                new Thread(_ledTime).start();
-                pdu.setFirsValue("Leds on while " + _value + "ms");
+                setLedTime(pdu);
                 break;
             case LED_BLINK:
                 System.out.println("LED BLINK " + pdu.getValues()[0]);
-                long _blink = Long.parseLong(pdu.getValues()[0]);
-                long _period = Long.parseLong(pdu.getValues()[1]);
-                LedArrayBlink _ledBlink = new LedArrayBlink(_blink, _period);
-                new Thread(_ledBlink).start();
-                pdu.setFirsValue("Leds blinking while " + _blink + "ms with period " + _period + "ms");
+                setLedBlink(pdu);
                 break;
             case CHECK:
                 System.out.println("CHECK");
@@ -270,17 +258,15 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LIGHT_THRESHOLD_CONFIG:
                 System.out.println("LIGHT THRESHOLD CONFIG");
-                if (this.pm.isLightSensorActive()) {
-                    this.keeper.setLightThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
-                }
-                pdu.setFirsValue("Light threshold configured");
+                configLightThresholdKeeper(pdu);
                 break;
             case TEMPERATURE_THRESHOLD_CONFIG:
                 System.out.println("TEMPERATURE THRESHOLD CONFIG");
-                if (this.pm.isTemperatureSensorActive()) {
-                    this.keeper.setTemperatureThresholdKeeper(Integer.parseInt(pdu.getValues()[0]), Integer.parseInt(pdu.getValues()[1]), Long.parseLong(pdu.getValues()[2]));
-                }
-                pdu.setFirsValue("Temperature threshold configured");
+                configTemperatureThresholdKeeper(pdu);
+                break;
+            case READ_THRESHOLD_CONFIGURATION:
+                System.out.println("READ THRESHOLD CONFIGURATION");
+                readThresholdConfiguration(pdu);
                 break;
             default:
                 pdu = null;
@@ -301,35 +287,107 @@ public class SunSpotApplication extends MIDlet implements Constans {
             case LIGHT_THRESHOLD_ON:
                 if (this.pm.isLightSensorActive()) {
                     this.keeper.launchLightThresholdKeeper();
-                    pdu.setFirsValue("Light Threshold Keeper ON");
+                    pdu.setValues(this.keeper.getStatusLightThresholdKeeperr());
                 } else {
-                    pdu.setFirsValue(this.pm.getLightMeasure());
+                    pdu.setFirsValue("Light sensor is OFF. There is not posible switch the threshold keeper");
                 }
                 break;
             case LIGHT_THRESHOLD_OFF:
                 if (this.pm.isLightSensorActive()) {
                     this.keeper.stopLightThresholdKeeper();
-                    pdu.setFirsValue("Light Threshold Keeper OFF");
+                    pdu.setValues(this.keeper.getStatusLightThresholdKeeperr());
                 } else {
-                    pdu.setFirsValue(this.pm.getLightMeasure());
+                    pdu.setFirsValue("Light sensor is OFF. There is not posible switch the threshold keeper");
                 }
                 break;
             case TEMPERATURE_THRESHOLD_ON:
                 if (this.pm.isTemperatureSensorActive()) {
                     this.keeper.launchTemperatureThresholdKeeper();
-                    pdu.setFirsValue("Temperature Threshold Keeper ON");
+                    pdu.setValues(this.keeper.getStatusTemperatureThresholdKeeper());
                 } else {
-                    pdu.setFirsValue(this.pm.getTemperatureMeasure());
+                    pdu.setFirsValue("Temperature sensor is OFF. There is not posible switch the threshold keeper");
                 }
                 break;
             case TEMPERATURE_THRESHOLD_OFF:
                 if (this.pm.isTemperatureSensorActive()) {
                     this.keeper.stopTemperatureThresholdKeeper();
-                    pdu.setFirsValue("Temperature Threshold Keeper OFF");
+                    pdu.setValues(this.keeper.getStatusTemperatureThresholdKeeper());
                 } else {
-                    pdu.setFirsValue(this.pm.getTemperatureMeasure());
+                    pdu.setFirsValue("Temperature sensor is OFF. There is not posible switch the threshold keeper");
                 }
                 break;
         }
+    }
+
+    private void configLightThresholdKeeper(PDU pdu) {
+        try {
+            double maxValue = Double.parseDouble(pdu.getValues()[0]);
+            double minValue = Double.parseDouble(pdu.getValues()[1]);
+            if (this.pm.isLightSensorActive() && (minValue < maxValue)) {
+                this.keeper.setLightThresholdKeeper(maxValue, minValue, Long.parseLong(pdu.getValues()[2]));
+                pdu.setValues(this.keeper.getStatusLightThresholdKeeperr());
+            } else if (minValue > maxValue) {
+                pdu.setFirsValue("Parameters error: The minimun value is higher than maximun value");
+            } else {
+                pdu.setFirsValue("Light sensor is OFF. There is not posible switch the threshold keeper");
+            }
+        } catch (NumberFormatException ex) {
+            pdu.setFirsValue("Error" + ex.getMessage());
+        }
+    }
+
+    private void configTemperatureThresholdKeeper(PDU pdu) {
+        try {
+            double maxValue = Double.parseDouble(pdu.getValues()[0]);
+            double minValue = Double.parseDouble(pdu.getValues()[1]);
+            if (this.pm.isTemperatureSensorActive() && (minValue < maxValue)) {
+                this.keeper.setTemperatureThresholdKeeper(maxValue, minValue, Long.parseLong(pdu.getValues()[2]));
+                pdu.setValues(this.keeper.getStatusTemperatureThresholdKeeper());
+            } else if (minValue > maxValue) {
+                pdu.setFirsValue("Parameters error: The minimun value is higher than maximun value");
+            } else {
+                pdu.setFirsValue("Temperature sensor is OFF. There is not posible switch the threshold keeper");
+            }
+        } catch (NumberFormatException ex) {
+            pdu.setFirsValue("Error" + ex.getMessage());
+        }
+    }
+
+    private void readThresholdConfiguration(PDU pdu) {
+        String[] _lightInfo = this.keeper.getStatusLightThresholdKeeperr();
+        String[] _tempInfo = this.keeper.getStatusTemperatureThresholdKeeper();
+        int lengthArray = _lightInfo.length + _tempInfo.length;
+        String[] _temp = new String[lengthArray];
+        int i;
+        for (i = 0; i < _lightInfo.length; i++) {
+            _temp[i] = _lightInfo[i];
+        }
+        for (i = 0; i < _tempInfo.length; i++) {
+            _temp[i + _lightInfo.length] = _tempInfo[i];
+        }
+        pdu.setValues(_temp);
+    }
+
+    private void getMeassureAccelerometer(PDU pdu) {
+        String _measureAccelerometer[] = new String[3];
+        _measureAccelerometer[0] = this.pm.getAcceletometerX();
+        _measureAccelerometer[1] = this.pm.getAcceletometerY();
+        _measureAccelerometer[2] = this.pm.getAcceletometerZ();
+        pdu.setValues(_measureAccelerometer);
+    }
+
+    private void setLedBlink(PDU pdu) throws NumberFormatException {
+        long _blink = Long.parseLong(pdu.getValues()[0]);
+        long _period = Long.parseLong(pdu.getValues()[1]);
+        LedArrayBlink _ledBlink = new LedArrayBlink(_blink, _period);
+        new Thread(_ledBlink).start();
+        pdu.setFirsValue("Leds blinking while " + _blink + "ms with period " + _period + "ms");
+    }
+
+    private void setLedTime(PDU pdu) throws NumberFormatException {
+        long _value = Long.parseLong(pdu.getValues()[0]);
+        LedArrayTime _ledTime = new LedArrayTime(_value);
+        new Thread(_ledTime).start();
+        pdu.setFirsValue("Leds on while " + _value + "ms");
     }
 }

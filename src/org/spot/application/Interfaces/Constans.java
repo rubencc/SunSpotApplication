@@ -37,6 +37,7 @@ public interface Constans {
     public final int ACCELEROMETER_NOT_PRESENT = 0x6B;
     public final int LED_ARRAY_NOT_PRESENT = 0x6C;
     public final int READ_CONFIGURATION = 0x80;
+    public final int READ_THRESHOLD_CONFIGURATION = 0x81;
     public final int THRESHOLD_FEATURE = 0x90;
     public final int LIGHT_THRESHOLD_ON = 0x91;
     public final int LIGHT_THRESHOLD_OFF = 0x92;
@@ -44,6 +45,7 @@ public interface Constans {
     public final int TEMPERATURE_THRESHOLD_OFF = 0x94;
     public final int LIGHT_THRESHOLD_CONFIG = 0x95;
     public final int TEMPERATURE_THRESHOLD_CONFIG = 0x96;
+    public final int THRESHOLD_INFO = 0x97;
     public final boolean BROADCAST = true;
     public final boolean NO_BROADCAST = false;
 }

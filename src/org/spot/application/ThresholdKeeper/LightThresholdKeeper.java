@@ -6,7 +6,6 @@ package org.spot.application.ThresholdKeeper;
 
 import com.sun.spot.util.Utils;
 import org.spot.application.Network.PDU;
-import org.spot.application.Interfaces.Constans;
 
 /**
  *
@@ -16,8 +15,8 @@ public class LightThresholdKeeper extends ThresholdKeeper {
 
     private final String NAME = "Light Threshold Keeper";
     //Valores por defecto del umbral
-    private final int MAXVALUE = 550;
-    private final int MINVALUE = 350;
+    private final double MAXVALUE = 550;
+    private final double MINVALUE = 350;
     //Indicación led para valores superiores
     private final int ABOVEWARNING = 80;
     //Indicación led para valores menores
@@ -41,34 +40,39 @@ public class LightThresholdKeeper extends ThresholdKeeper {
     public void run() {
         this.runCond = true;
         while (this.runCond && this.sensor.isLightSensorActive()) {
-            int _value = Integer.parseInt(this.sensor.getLightMeasure());
-            if (_value > this.getMaxValue()) {
+            double _value = Double.parseDouble(this.sensor.getLightMeasure());
+            if (_value > this.getMinValue() && _value > this.getMaxValue()) {
                 this.sensor.ledSetOn(ABOVEWARNING);
                 this.sensor.ledSetColor(ABOVECOLOR);
-                sendPDU(String.valueOf(_value));
+                sendPDU(formatPDU(String.valueOf(_value), true));
             }
-            if (_value < this.getMinValue()) {
+            if (_value < this.getMinValue() && _value < this.getMaxValue()) {
                 this.sensor.ledSetOn(BELOWWARNING);
                 this.sensor.ledSetColor(BELOWCOLOR);
-                sendPDU(String.valueOf(_value));
+                sendPDU(formatPDU(String.valueOf(_value), true));
             }
             if (this.getMinValue() < _value && _value < this.getMaxValue()) {
                 this.sensor.ledSetOn(OKVALUE);
                 this.sensor.ledSetColor(OKCOLOR);
+                sendPDU(formatPDU(String.valueOf(_value), false));
             }
-            Utils.sleep(PERIOD);
+            Utils.sleep(this.getPeriod());
         }
         this.sensor.ledSetOff();
     }
 
     /**
-     * Envia un mensaje mendiante la conexion peer a la cola de alarmas del host
-     * application
+     * Forma una PDU con la informacion de la alerta
      *
-     * @param text -- Texto que se envia a la cola de alarmas
+     * @param text -- Valor medido
      */
-    private void sendPDU(String text) {
-        PDU pdu = new PDU(QUEUE_ALERT, NAME, null, false);
+    private PDU formatPDU(String text, boolean isAlert) {
+        PDU pdu;
+        if (isAlert) {
+            pdu = new PDU(QUEUE_ALERT, this.NAME, null, false);
+        } else {
+            pdu = new PDU(THRESHOLD_INFO, this.NAME, null, false);
+        }
         String[] _temp = new String[5];
         _temp[0] = this.getName();
         _temp[1] = String.valueOf("Max value: " + this.getMaxValue());
@@ -76,7 +80,8 @@ public class LightThresholdKeeper extends ThresholdKeeper {
         _temp[3] = String.valueOf("Period: " + this.getPeriod());
         _temp[4] = String.valueOf("Measured value: " + text);
         pdu.setValues(_temp);
-        this.pCon.sendToPeer(pdu);
+        return pdu;
+
     }
 
     /**
@@ -86,5 +91,29 @@ public class LightThresholdKeeper extends ThresholdKeeper {
      */
     public String getName() {
         return this.NAME;
+    }
+
+    /**
+     * Devuelve la informacion del vigilante del umbral
+     *
+     * @return
+     */
+    public String[] getStatus() {
+        String[] _temp = new String[5];
+        _temp[0] = this.getName();
+        _temp[1] = String.valueOf("Max value: " + this.getMaxValue());
+        _temp[2] = String.valueOf("Min value: " + this.getMinValue());
+        _temp[3] = String.valueOf("Period: " + this.getPeriod());
+        _temp[4] = String.valueOf("Is Running: " + this.running);
+        return _temp;
+    }
+
+    /**
+     * Envia una PDU a traves de la conexion peer
+     *
+     * @param pdu
+     */
+    protected void sendPDU(PDU pdu) {
+        this.pCon.sendToPeer(pdu);
     }
 }

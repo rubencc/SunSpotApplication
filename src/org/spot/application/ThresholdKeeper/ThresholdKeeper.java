@@ -1,5 +1,6 @@
 package org.spot.application.ThresholdKeeper;
 
+import org.spot.application.Network.PDU;
 import org.spot.application.Network.PeerConnection;
 import org.spot.application.Peripherals.Factory.PeripheralsManager;
 
@@ -11,17 +12,20 @@ import org.spot.application.Peripherals.Factory.PeripheralsManager;
 abstract class ThresholdKeeper implements Runnable {
 
     private long period;
-    private int minValue;
-    private int maxValue;
+    private double minValue;
+    private double maxValue;
     protected boolean runCond;
+    protected boolean running;
     protected PeripheralsManager sensor;
     protected PeerConnection pCon;
     protected final int QUEUE_ALERT = 0x20;
+    protected final int THRESHOLD_INFO = 0x97;
 
     public ThresholdKeeper() {
         this.sensor = PeripheralsManager.getInstance();
         this.pCon = PeerConnection.getInstance();
-        this.runCond = true;
+        this.runCond = false;
+        this.running = false;
     }
 
     /**
@@ -34,14 +38,14 @@ abstract class ThresholdKeeper implements Runnable {
     /**
      * @return Valor minimo del umbral
      */
-    public int getMinValue() {
+    public double getMinValue() {
         return minValue;
     }
 
     /**
      * @return Valor maximo del umbral
      */
-    public int getMaxValue() {
+    public double getMaxValue() {
         return maxValue;
     }
 
@@ -49,6 +53,18 @@ abstract class ThresholdKeeper implements Runnable {
      * @return Nombre del vigilante de umbral
      */
     public abstract String getName();
+
+    /**
+     * @return Estado del hilo
+     */
+    public abstract String[] getStatus();
+
+    /**
+     * Envia una PDU con la informacion
+     *
+     * @param pdu -- Informacion que se va a enviar
+     */
+    protected abstract void sendPDU(PDU pdu);
 
     /**
      * @param period -- Periodo de toma de muestras
@@ -60,14 +76,14 @@ abstract class ThresholdKeeper implements Runnable {
     /**
      * @param minValue -- Valor minimo del umbral
      */
-    public void setMinValue(int minValue) {
+    public void setMinValue(double minValue) {
         this.minValue = minValue;
     }
 
     /**
      * @param maxValue -- Valor maximo del umbral
      */
-    public void setMaxValue(int maxValue) {
+    public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
     }
 
@@ -76,6 +92,21 @@ abstract class ThresholdKeeper implements Runnable {
      */
     public void finish() {
         this.runCond = false;
+        this.running = false;
         this.sensor.ledSetOff();
+    }
+
+    /**
+     * @return the running
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * @param running the running to set
+     */
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }
