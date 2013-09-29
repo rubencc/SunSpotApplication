@@ -6,7 +6,7 @@ import com.sun.spot.util.Utils;
  * Clase que provee de la funcionalidad de parpadeo al array de leds. Se ejecuta
  * en un hilo independiente.
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class LedArrayBlink implements Runnable {
 

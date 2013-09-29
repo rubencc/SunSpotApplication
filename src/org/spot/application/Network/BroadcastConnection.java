@@ -11,7 +11,7 @@ import javax.microedition.io.Datagram;
 
 /**
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class BroadcastConnection {
 
@@ -38,6 +38,11 @@ public class BroadcastConnection {
 
     }
 
+    /**
+     * Instancia del objeto segun el patron singlenton
+     *
+     * @return Instnacia unica de la clase
+     */
     public static BroadcastConnection getInstance() {
         return INSTANCE;
     }
@@ -45,7 +50,7 @@ public class BroadcastConnection {
     /**
      * Lee las PDUs de la conexion broadcast y marca las respuestas como tales
      *
-     * @return PDU
+     * @return PDU PDU leida
      */
     public synchronized PDU readBroadcast() {
         PDU pdu = null;
@@ -73,7 +78,7 @@ public class BroadcastConnection {
     /**
      * Comprueba si hay paquetes disponibles en la conexion broadcast.
      *
-     * @return
+     * @return false/true segun haya paquetes disponibles para leer
      */
     public synchronized boolean packetsAvailable() {
         return this.bCon.packetsAvailable();
@@ -94,7 +99,7 @@ public class BroadcastConnection {
      * Devuelve la condicion de nuevo host application enviando a traves de la
      * conexión broadcast
      *
-     * @return
+     * @return false/true si se trata del primer paquete enviado por un host
      */
     public synchronized boolean isNewBroadcast() {
         return this.newBroadcast;

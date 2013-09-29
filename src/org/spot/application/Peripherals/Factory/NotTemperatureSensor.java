@@ -4,7 +4,7 @@ package org.spot.application.Peripherals.Factory;
  * Clase que modela el comportamiento del sensor de temperatura cuando no esta
  * instalado
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class NotTemperatureSensor extends TemperatureSensor {
 

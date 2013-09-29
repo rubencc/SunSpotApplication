@@ -9,7 +9,7 @@ import org.spot.application.Network.PDU;
 
 /**
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class LightThresholdKeeper extends ThresholdKeeper {
 
@@ -96,7 +96,7 @@ public class LightThresholdKeeper extends ThresholdKeeper {
     /**
      * Devuelve la informacion del vigilante del umbral
      *
-     * @return
+     * @return String con el estado del gestor
      */
     public String[] getStatus() {
         String[] _temp = new String[5];

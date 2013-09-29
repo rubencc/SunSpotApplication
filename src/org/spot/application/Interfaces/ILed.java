@@ -7,7 +7,7 @@ package org.spot.application.Interfaces;
 /**
  * Interfaz para la gestion del array de leds del dispositivo
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public interface ILed {
 
@@ -15,14 +15,14 @@ public interface ILed {
      * Selecciona el color que muestra el array de leds
      *
      * @param clr -- Valor del color
-     * @return
+     * @return false/true segun se haya realizado la operacion
      */
     boolean setColor(int clr);
 
     /**
      * Apaga los leds y elimina parte de la configuración
      *
-     * @return
+     * @return false/true segun se haya realizado la operacion
      */
     boolean setOff();
 
@@ -31,7 +31,7 @@ public interface ILed {
      * configuración
      *
      * @param condition
-     * @return
+     * @return false/true segun se haya realizado la operacion
      */
     boolean setOn(boolean condition);
 
@@ -39,7 +39,7 @@ public interface ILed {
      * Selecciona el valor que se va a mostrar en el array de leds
      *
      * @param bits
-     * @return
+     * @return false/true segun se haya realizado la operacion
      */
     boolean setOn(int bits);
 
@@ -47,14 +47,14 @@ public interface ILed {
      * Activa los leds con el valor a mostrar por defecto o el ultimo que se
      * haya configurado
      *
-     * @return
+     * @return false/true segun se haya realizado la operacion
      */
     boolean setOn();
 
     /**
      * Devuelve el mensaje con el estado en el que se encuentra el array de leds
      *
-     * @return Estado
+     * @return Estado del periferico
      */
     String getStatus();
 }

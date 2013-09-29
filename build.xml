@@ -101,9 +101,17 @@
     <target depends="init" name="javadoc">
         <delete dir="doc"/>
         <mkdir dir="doc"/>
-        <javadoc author="true" destdir="doc" doctitle="My Project -- SPOT-side (Version 1.0)" packagenames="org.sunspotworld.demo" sourcepath="src" windowtitle="My Project -- SPOT-side v1.0">
-	    <classpath path="${sunspot.classpath}:${sunspot.bootclasspath}"/>
-            <header><![CDATA[<b>My Project -- SPOT-side<br>v1.0</b>]]></header>
+        <javadoc packagenames="org.*" sourcepath="${src.dir}" 
+                 destdir="doc" version="true" windowtitle="WSAN Simulator">
+            <doctitle><![CDATA[= WSAN Simulator =]]></doctitle>
+            <bottom>
+         <![CDATA[Reconocimiento – NoComercial (by-nc).]]>
+            </bottom>
+            <classpath>
+                <fileset dir="../../../../SunSPOT/sdk/lib/">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
         </javadoc>
     </target>
 

@@ -3,7 +3,7 @@ package org.spot.application.Interfaces;
 /**
  * Constantes para los tipos y valores contenidos en las PDUs
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public interface Constans {
 

@@ -6,7 +6,7 @@ import org.spot.application.Interfaces.ISensor;
  * Clase abstracta que implementa los metodos para las funcionalidades de los
  * sensores de luz y temperatura
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public abstract class Sensor implements ISensor {
 
@@ -26,7 +26,7 @@ public abstract class Sensor implements ISensor {
     /**
      * Devuelve el nombre del periferico
      *
-     * @return
+     * @return Nombre del periferico
      */
     public String getName() {
         return this.sensorName;
@@ -35,7 +35,7 @@ public abstract class Sensor implements ISensor {
     /**
      * Devuelve el estado de actividad del periferico
      *
-     * @return
+     * @return false/true
      */
     public abstract boolean isActive();
 }

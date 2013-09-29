@@ -3,7 +3,7 @@ package org.spot.application.ThresholdKeeper;
 /**
  * Gestor de los hilos que vigilan los ubrales de luz y temperatura
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class ThresholdManager {
 
@@ -93,7 +93,7 @@ public class ThresholdManager {
     /**
      * Devuelve el estado del hilo vigilante de la temperatura
      *
-     * @return
+     * @return String con el estado del gestor de temperatura
      */
     public String[] getStatusTemperatureThresholdKeeper() {
         return this.temperature.getStatus();
@@ -102,7 +102,7 @@ public class ThresholdManager {
     /**
      * Devuelve el estado del hilo vigilante de la luz
      *
-     * @return
+     * @return String con el estado del gestor de luz
      */
     public String[] getStatusLightThresholdKeeperr() {
         return this.light.getStatus();

@@ -6,7 +6,7 @@ import java.io.IOException;
  * Clase que mopdela el comportamiento del sensor de temperatura cuando esta
  * activo
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class TemperatureActiveSensor extends TemperatureSensor {
 

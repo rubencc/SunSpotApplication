@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.spot.application.ThresholdKeeper;
 
 import com.sun.spot.util.Utils;
@@ -10,7 +6,7 @@ import org.spot.application.Network.PDU;
 /**
  * Clase vigilante del umbral de temperatura
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class TemperatureThresholdKeeper extends ThresholdKeeper {
 
@@ -96,7 +92,7 @@ public class TemperatureThresholdKeeper extends ThresholdKeeper {
     /**
      * Devuelve la informacion del vigilante del umbral
      *
-     * @return
+     * @return String con el estado del gestor
      */
     public String[] getStatus() {
         String[] _temp = new String[5];

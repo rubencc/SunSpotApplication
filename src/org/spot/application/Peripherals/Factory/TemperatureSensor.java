@@ -6,7 +6,7 @@ import com.sun.spot.resources.transducers.ITemperatureInput;
 /**
  * Clase que implementa las funcionalidades del sensor de temperatura
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public abstract class TemperatureSensor extends Sensor {
 

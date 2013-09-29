@@ -5,7 +5,7 @@ import com.sun.spot.resources.transducers.LEDColor;
 /**
  * Clase que modela el comportamiento del array de leds cuando esta activo
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class LedArrayActive extends LedArray {
 

@@ -3,7 +3,7 @@ package org.spot.application.Peripherals.Factory;
 /**
  * Clase que encapsula la gestion y el comportamiento de los perifericos
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class PeripheralsManager {
 
@@ -108,7 +108,7 @@ public class PeripheralsManager {
     /**
      * Medida del sensor de luz.
      *
-     * @return
+     * @return Medida del sensor de luz
      */
     public String getLightMeasure() {
         return this.lightSensor.getMeasure();
@@ -117,7 +117,7 @@ public class PeripheralsManager {
     /**
      * Medida del sensor de temperatura.
      *
-     * @return
+     * @return Medida del sensor de temperatura
      */
     public String getTemperatureMeasure() {
         return this.temperatureSensor.getMeasure();
@@ -126,7 +126,7 @@ public class PeripheralsManager {
     /**
      * Medida del acelerometro X
      *
-     * @return
+     * @return Medida del acelerometro
      */
     public String getAcceletometerX() {
         return this.accelerometer.getX();
@@ -135,7 +135,7 @@ public class PeripheralsManager {
     /**
      * Medida del acelerometro Y
      *
-     * @return
+     * @return Medida del acelerometro
      */
     public String getAcceletometerY() {
         return this.accelerometer.getY();
@@ -144,7 +144,7 @@ public class PeripheralsManager {
     /**
      * Medida del acelerometro Z
      *
-     * @return
+     * @return Medida del acelerometro
      */
     public String getAcceletometerZ() {
         return this.accelerometer.getZ();
@@ -153,7 +153,7 @@ public class PeripheralsManager {
     /**
      * Pone todos los leds en off.
      *
-     * @return
+     * @return Medida del acelerometro
      */
     public synchronized boolean ledSetOff() {
         return this.ledArray.setOff();
@@ -162,18 +162,18 @@ public class PeripheralsManager {
     /**
      * Pone todos los leds en el estado indicado.
      *
-     * @param on
-     * @return
+     * @param condition - false/true
+     * @return false/true segun se haya podido ejecutar la operacion
      */
-    public synchronized boolean ledSetOn(boolean on) {
-        return this.ledArray.setOn(on);
+    public synchronized boolean ledSetOn(boolean condition) {
+        return this.ledArray.setOn(condition);
     }
 
     /**
      * Activa los leds para representar la secuencia numerica.
      *
-     * @param value
-     * @return
+     * @param value - Valor en decimal que representaran los leds
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public synchronized boolean ledSetOn(int value) {
         return this.ledArray.setOn(value);
@@ -182,7 +182,7 @@ public class PeripheralsManager {
     /**
      * Activa los leds con la ultima configuracion conocida.
      *
-     * @return
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public synchronized boolean ledSetOn() {
         return this.ledArray.setOn();
@@ -191,7 +191,7 @@ public class PeripheralsManager {
     /**
      * Indica si el array de leds esta mostrando algun numero
      *
-     * @return
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public synchronized boolean hasANumber() {
         return this.ledArray.hasANumber();
@@ -200,8 +200,8 @@ public class PeripheralsManager {
     /**
      * Establece el color de los leds.
      *
-     * @param color
-     * @return
+     * @param color - Codigo de color
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public synchronized boolean ledSetColor(int color) {
         return this.ledArray.setColor(color);
@@ -219,7 +219,7 @@ public class PeripheralsManager {
     /**
      * Devuelve el estado de actividad del sensor de luz
      *
-     * @return
+     * @return false/true
      */
     public boolean isLightSensorActive() {
         return this.lightSensor.isActive();
@@ -228,7 +228,7 @@ public class PeripheralsManager {
     /**
      * Devuelve el estado de actividad del sensor de temperatura
      *
-     * @return
+     * @return false/true
      */
     public boolean isTemperatureSensorActive() {
         return this.temperatureSensor.isActive();
@@ -237,7 +237,7 @@ public class PeripheralsManager {
     /**
      * Devuelve el estado de actividad del array de leds
      *
-     * @return
+     * @return false/true
      */
     public boolean isLedArrayActive() {
         return this.ledArray.isActive();

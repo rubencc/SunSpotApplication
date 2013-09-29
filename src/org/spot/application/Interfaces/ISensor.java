@@ -7,21 +7,21 @@ package org.spot.application.Interfaces;
 /**
  * Interfaz de metodos comunes para los sensores del dispostivo
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public interface ISensor {
 
     /**
      * Devuelve una medida
      *
-     * @return medida
+     * @return medida del sensor
      */
     String getMeasure();
 
     /**
      * Devuelve el estado del sensor
      *
-     * @return estado
+     * @return estado del periferico
      */
     String getStatus();
 }

@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Clase que modela el comportamiento del sensor de luz cuando esta activo
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class LightActiveSensor extends LightSensor {
 

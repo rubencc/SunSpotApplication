@@ -37,6 +37,9 @@
                     <target>clean</target>
                     <target>jar-app</target>
                 </action>
+                <action name="javadoc">
+                    <target>javadoc</target>
+                </action>
             </ide-actions>
             <export>
                 <type>folder</type>
@@ -55,9 +58,10 @@
                 </items>
                 <context-menu>
                     <ide-action name="build"/>
-                    <ide-action name="clean"/>
-                    <ide-action name="run"/>
                     <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="javadoc"/>
+                    <ide-action name="run"/>
                     <action>
                         <label>Build Project + Deploy to Sun SPOT</label>
                         <target>deploy</target>

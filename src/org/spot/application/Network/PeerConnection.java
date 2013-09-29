@@ -8,7 +8,7 @@ import javax.microedition.io.Datagram;
 /**
  * Clase de instancia unica para el envio y recepcion de mensajes en modo peer
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class PeerConnection {
 
@@ -31,6 +31,11 @@ public class PeerConnection {
         this.peerConnected = false;
     }
 
+    /**
+     * Instancia unica del objeto segun patron singlenton
+     *
+     * @return Instancia unica de la clase
+     */
     public synchronized static PeerConnection getInstance() {
         return INSTANCE;
     }
@@ -108,7 +113,7 @@ public class PeerConnection {
     /**
      * Envia una PDU a traves de la conexion peer.
      *
-     * @param PDU
+     * @param pdu con la informacion a enviar
      */
     public synchronized void sendToPeer(PDU pdu) {
         try {
@@ -136,7 +141,7 @@ public class PeerConnection {
     /**
      * Recibe una PDU a traves de la conexion peer.
      *
-     * @return PDU
+     * @return PDU PDU recibida
      */
     public synchronized PDU readPeer() {
         PDU pdu = null;
@@ -173,7 +178,7 @@ public class PeerConnection {
     /**
      * Comprueba si hay paquetes disposibles en caso de estar conectado al peer.
      *
-     * @return
+     * @return false/true segun haya paquetes disponibles para leer
      */
     public synchronized boolean packetsAvailable() {
         if (this.peerConnected) {

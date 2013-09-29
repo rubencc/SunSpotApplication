@@ -3,7 +3,7 @@ package org.spot.application.Peripherals.Factory;
 /**
  * Clase que modela el comportamiento del acelerometro cuando no esta activo
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class AccelerometerNotActive extends Accelerometer {
 

@@ -7,7 +7,7 @@ import org.spot.application.Interfaces.IAccelerometer;
 /**
  * Clase abstracta que maneja las funcionalidades del acelerometro
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public abstract class Accelerometer implements IAccelerometer {
 
@@ -26,28 +26,28 @@ public abstract class Accelerometer implements IAccelerometer {
     /**
      * Devuelve el valor del acelerometro en el eje X
      *
-     * @return
+     * @return Valor del acelerometro
      */
     public abstract String getX();
 
     /**
      * Devuelve el valor del acelerometro en el eje Y
      *
-     * @return
+     * @return Valor del acelerometro
      */
     public abstract String getY();
 
     /**
      * Devuelve el valor del acelerometro en el eje Z
      *
-     * @return
+     * @return Valor del acelerometro
      */
     public abstract String getZ();
 
     /**
      * Devuelve el nombre del periferico
      *
-     * @return Nombre
+     * @return Nombre del periferico
      */
     public String getName() {
         return this.name;
@@ -56,7 +56,7 @@ public abstract class Accelerometer implements IAccelerometer {
     /**
      * Devuelve el estado del periferico
      *
-     * @return Estado
+     * @return Estado del periferico
      */
     public abstract String getStatus();
 }

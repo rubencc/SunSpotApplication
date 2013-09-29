@@ -3,7 +3,7 @@ package org.spot.application.Network;
 /**
  * PDU para el intercambio de mensajes con el host application
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public class PDU {
 
@@ -92,6 +92,11 @@ public class PDU {
         this.broadcast = broadcast;
     }
 
+    /**
+     * Añade un unico y primer valor al array
+     *
+     * @param value
+     */
     public void setFirsValue(String value) {
         this.values = new String[1];
         this.values[0] = value;

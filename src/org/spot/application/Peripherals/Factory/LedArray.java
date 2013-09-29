@@ -7,7 +7,7 @@ import org.spot.application.Interfaces.ILed;
 /**
  * Clase abstracta para la gestion de las funcionalidades del array de leds
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public abstract class LedArray implements ILed {
 
@@ -28,22 +28,22 @@ public abstract class LedArray implements ILed {
     /**
      * Indica si el array de leds esta mostrando algun numero
      *
-     * @return
+     * @return false/true
      */
     public abstract boolean hasANumber();
 
     /**
      * Selecciona el color que muestra el array de leds
      *
-     * @param clr -- Valor del color
-     * @return
+     * @param clr - Valor del color
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public abstract boolean setColor(int clr);
 
     /**
      * Apaga los leds y elimina parte de la configuración
      *
-     * @return
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public abstract boolean setOff();
 
@@ -51,15 +51,15 @@ public abstract class LedArray implements ILed {
      * Selecciona el estado de los leds (on/off) sin eliminar la configuración
      *
      * @param condition
-     * @return
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public abstract boolean setOn(boolean condition);
 
     /**
      * Selecciona el valor que se va a mostrar en el array de leds
      *
-     * @param bits
-     * @return
+     * @param bits - Numero entero que representara en binario el array de leds
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public abstract boolean setOn(int bits);
 
@@ -67,14 +67,14 @@ public abstract class LedArray implements ILed {
      * Activa los leds con el valor a mostrar por defecto o el ultimo que se
      * haya configurado
      *
-     * @return
+     * @return false/true segun se haya podido ejecutar la operacion
      */
     public abstract boolean setOn();
 
     /**
      * Devuelve el nombre del dispostivo
      *
-     * @return
+     * @return Nombre del periferico
      */
     public String getName() {
         return this.name;

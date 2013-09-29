@@ -7,7 +7,7 @@ import org.spot.application.Peripherals.Factory.PeripheralsManager;
 /**
  * Clase abstracta para el funcionamiento de los umbrales
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 abstract class ThresholdKeeper implements Runnable {
 

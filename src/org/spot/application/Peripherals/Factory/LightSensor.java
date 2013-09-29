@@ -6,7 +6,7 @@ import com.sun.spot.resources.transducers.ILightSensor;
 /**
  * Clase que implementa las funcionalidades del sensor de luz
  *
- * @author rubencc
+ * @author Rubén Carretero <rubencc@gmail.com>
  */
 public abstract class LightSensor extends Sensor {
 
