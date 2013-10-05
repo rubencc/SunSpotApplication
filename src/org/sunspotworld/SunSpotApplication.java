@@ -287,17 +287,17 @@ public class SunSpotApplication extends MIDlet implements Constans {
             case LIGHT_THRESHOLD_ON:
                 if (this.pm.isLightSensorActive()) {
                     this.keeper.launchLightThresholdKeeper();
-                    pdu.setValues(this.keeper.getStatusLightThresholdKeeperr());
+                    pdu.setValues(this.keeper.getStatusLightThresholdKeeper());
                 } else {
-                    pdu.setFirsValue("Light sensor is OFF. There is not posible switch the threshold keeper");
+                    pdu.setFirsValue(this.pm.getStatusLightSensor());
                 }
                 break;
             case LIGHT_THRESHOLD_OFF:
                 if (this.pm.isLightSensorActive()) {
                     this.keeper.stopLightThresholdKeeper();
-                    pdu.setValues(this.keeper.getStatusLightThresholdKeeperr());
+                    pdu.setValues(this.keeper.getStatusLightThresholdKeeper());
                 } else {
-                    pdu.setFirsValue("Light sensor is OFF. There is not posible switch the threshold keeper");
+                    pdu.setFirsValue(this.pm.getStatusLightSensor());
                 }
                 break;
             case TEMPERATURE_THRESHOLD_ON:
@@ -305,7 +305,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                     this.keeper.launchTemperatureThresholdKeeper();
                     pdu.setValues(this.keeper.getStatusTemperatureThresholdKeeper());
                 } else {
-                    pdu.setFirsValue("Temperature sensor is OFF. There is not posible switch the threshold keeper");
+                    pdu.setFirsValue(this.pm.getStatusTemperatureSensor());
                 }
                 break;
             case TEMPERATURE_THRESHOLD_OFF:
@@ -313,7 +313,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                     this.keeper.stopTemperatureThresholdKeeper();
                     pdu.setValues(this.keeper.getStatusTemperatureThresholdKeeper());
                 } else {
-                    pdu.setFirsValue("Temperature sensor is OFF. There is not posible switch the threshold keeper");
+                    pdu.setFirsValue(this.pm.getStatusTemperatureSensor());
                 }
                 break;
         }
@@ -325,11 +325,11 @@ public class SunSpotApplication extends MIDlet implements Constans {
             double minValue = Double.parseDouble(pdu.getValues()[1]);
             if (this.pm.isLightSensorActive() && (minValue < maxValue)) {
                 this.keeper.setLightThresholdKeeper(maxValue, minValue, Long.parseLong(pdu.getValues()[2]));
-                pdu.setValues(this.keeper.getStatusLightThresholdKeeperr());
+                pdu.setValues(this.keeper.getStatusLightThresholdKeeper());
             } else if (minValue > maxValue) {
                 pdu.setFirsValue("Parameters error: The minimun value is higher than maximun value");
             } else {
-                pdu.setFirsValue("Light sensor is OFF. There is not posible switch the threshold keeper");
+                pdu.setFirsValue(this.pm.getStatusLightSensor());
             }
         } catch (NumberFormatException ex) {
             pdu.setFirsValue("Error" + ex.getMessage());
@@ -346,7 +346,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
             } else if (minValue > maxValue) {
                 pdu.setFirsValue("Parameters error: The minimun value is higher than maximun value");
             } else {
-                pdu.setFirsValue("Temperature sensor is OFF. There is not posible switch the threshold keeper");
+                pdu.setFirsValue(this.pm.getStatusTemperatureSensor());
             }
         } catch (NumberFormatException ex) {
             pdu.setFirsValue("Error" + ex.getMessage());
@@ -354,7 +354,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
     }
 
     private void readThresholdConfiguration(PDU pdu) {
-        String[] _lightInfo = this.keeper.getStatusLightThresholdKeeperr();
+        String[] _lightInfo = this.keeper.getStatusLightThresholdKeeper();
         String[] _tempInfo = this.keeper.getStatusTemperatureThresholdKeeper();
         int lengthArray = _lightInfo.length + _tempInfo.length;
         String[] _temp = new String[lengthArray];

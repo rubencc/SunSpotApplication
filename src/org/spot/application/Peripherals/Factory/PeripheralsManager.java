@@ -207,6 +207,11 @@ public class PeripheralsManager {
         return this.ledArray.setColor(color);
     }
 
+    /**
+     * Devuelve el estado de todos los perifericos del dispositivo
+     *
+     * @return String[] con el estado de los dispositivos
+     */
     public String[] getStatus() {
         String[] _status = new String[4];
         _status[0] = this.lightSensor.getStatus();
@@ -214,6 +219,42 @@ public class PeripheralsManager {
         _status[2] = this.accelerometer.getStatus();
         _status[3] = this.ledArray.getStatus();
         return _status;
+    }
+
+    /**
+     * Devuelve el estado del sensor de luz
+     *
+     * @return String con el estado del sensor
+     */
+    public String getStatusLightSensor() {
+        return this.lightSensor.getStatus();
+    }
+
+    /**
+     * Devuelve el estado del sensor de temperatura
+     *
+     * @return String con el estado del sensor
+     */
+    public String getStatusTemperatureSensor() {
+        return this.temperatureSensor.getStatus();
+    }
+
+    /**
+     * Devuelve el estado del acelerometro
+     *
+     * @return String con el estado del sensor
+     */
+    public String getStatusAcelerometer() {
+        return this.accelerometer.getStatus();
+    }
+
+    /**
+     * Devuelve el estado del array de leds
+     *
+     * @return String con el estado del array
+     */
+    public String getStatusLedArray() {
+        return this.ledArray.getStatus();
     }
 
     /**

@@ -104,7 +104,7 @@ public class ThresholdManager {
      *
      * @return String con el estado del gestor de luz
      */
-    public String[] getStatusLightThresholdKeeperr() {
+    public String[] getStatusLightThresholdKeeper() {
         return this.light.getStatus();
     }
 }
