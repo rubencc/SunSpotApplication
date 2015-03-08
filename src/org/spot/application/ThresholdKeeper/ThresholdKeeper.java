@@ -2,7 +2,7 @@ package org.spot.application.ThresholdKeeper;
 
 import org.spot.application.Network.PDU;
 import org.spot.application.Network.PeerConnection;
-import org.spot.application.Peripherals.Factory.PeripheralsManager;
+import org.spot.application.Peripherals.Manager.PeripheralsManager;
 
 /**
  * Clase abstracta para el funcionamiento de los umbrales

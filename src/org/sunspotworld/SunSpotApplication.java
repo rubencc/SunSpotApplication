@@ -11,13 +11,15 @@ import com.sun.spot.util.Utils;
 import java.io.IOException;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+import org.spot.application.Configuration.Manager.ConfigurationManager;
+import org.spot.application.Configuration.Manager.IConfigurationManager;
 import org.spot.application.Interfaces.Constans;
 import org.spot.application.Network.BroadcastConnection;
 import org.spot.application.Network.PDU;
 import org.spot.application.Network.PeerConnection;
-import org.spot.application.Peripherals.Factory.LedArrayBlink;
-import org.spot.application.Peripherals.Factory.LedArrayTime;
-import org.spot.application.Peripherals.Factory.PeripheralsManager;
+import org.spot.application.Peripherals.Manager.LedArrayBlink;
+import org.spot.application.Peripherals.Manager.LedArrayTime;
+import org.spot.application.Peripherals.Manager.PeripheralsManager;
 import org.spot.application.ThresholdKeeper.ThresholdManager;
 
 /**
@@ -35,6 +37,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
     private BroadcastConnection bCon;
     private PeerConnection pCon;
     private ThresholdManager keeper;
+    private IConfigurationManager configManager;
 
     protected void startApp() throws MIDletStateChangeException {
 
@@ -51,6 +54,8 @@ public class SunSpotApplication extends MIDlet implements Constans {
         pm = PeripheralsManager.getInstance();
         //Gestor de umbrales
         keeper = ThresholdManager.getInstance();
+        //Gestor de la configuracion
+        configManager = new ConfigurationManager(pm);
         System.out.println("Direccion de red = " + ourAddress);
         pCon.setOurAddress(ourAddress);
         while (true) {
@@ -100,71 +105,6 @@ public class SunSpotApplication extends MIDlet implements Constans {
             this.bCon.setNewBroadcast(false);
         }
         pdu.setType(PING_PACKET_REPLY);
-    }
-
-    /**
-     * Activa o desactiva sensores
-     *
-     * @param type
-     * @throws IOException
-     * @throws NumberFormatException
-     */
-    private String configFeatures(String value) {
-
-        String _temp = null;
-        switch (Integer.parseInt(value)) {
-            case LIGHTSENSOR_ON:
-                this.pm.setLightSensorStatus("on");
-                _temp = "Light sensor ON";
-                break;
-            case LIGHTSENSOR_OFF:
-                this.pm.setLightSensorStatus("off");
-                _temp = "Light sensor OFF";
-                break;
-            case LIGHT_SENSOR_NOT_PRESENT:
-                this.pm.setLightSensorStatus("notpresent");
-                _temp = "Sensor unavailable";
-                break;
-            case TEMPERATURESENSOR_ON:
-                this.pm.setTemperatureSensorStatus("on");
-                _temp = "Temperature sensor ON";
-                break;
-            case TEMPERATURESENSOR_OFF:
-                this.pm.setTemperatureSensorStatus("off");
-                _temp = "Temperature sensor OFF";
-                break;
-            case TEMPERATURE_SENSOR_NOT_PRESENT:
-                this.pm.setTemperatureSensorStatus("notpresent");
-                _temp = "Sensor unavailable";
-                break;
-            case ACCELEROMETER_ON:
-                this.pm.setAccelerometerStatus("on");
-                _temp = "Accelerometer ON";
-                break;
-            case ACCELEROMETER_OFF:
-                this.pm.setAccelerometerStatus("off");
-                _temp = "Accelerometer OFF";
-                break;
-            case ACCELEROMETER_NOT_PRESENT:
-                this.pm.setAccelerometerStatus("notpresent");
-                _temp = "Acelerometer unavailable";
-                break;
-            case LEDARRAY_ON:
-                this.pm.setLedArrayStatus("on");
-                _temp = "LedArray ON";
-                break;
-            case LEDARRAY_OFF:
-                this.pm.ledSetOff();
-                this.pm.setLedArrayStatus("off");
-                _temp = "LedArray OFF";
-                break;
-            case LED_ARRAY_NOT_PRESENT:
-                this.pm.ledSetOff();
-                this.pm.setLedArrayStatus("notpresent");
-                _temp = "LedArray unavailable";
-                break;
-        }
-        return _temp;
     }
 
     /**
@@ -246,7 +186,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case FEATURE:
                 System.out.println("FEATURES");
-                pdu.setFirsValue(configFeatures(pdu.getValues()[0]));
+                pdu.setFirsValue(configManager.configFeatures(pdu.getValues()[0]));
                 break;
             case READ_CONFIGURATION:
                 System.out.println("READ FEATURES");
@@ -379,14 +319,14 @@ public class SunSpotApplication extends MIDlet implements Constans {
     private void setLedBlink(PDU pdu) throws NumberFormatException {
         long _blink = Long.parseLong(pdu.getValues()[0]);
         long _period = Long.parseLong(pdu.getValues()[1]);
-        LedArrayBlink _ledBlink = new LedArrayBlink(_blink, _period);
+        LedArrayBlink _ledBlink = new LedArrayBlink(_blink, _period, this.pm);
         new Thread(_ledBlink).start();
         pdu.setFirsValue("Leds blinking while " + _blink + "ms with period " + _period + "ms");
     }
 
     private void setLedTime(PDU pdu) throws NumberFormatException {
         long _value = Long.parseLong(pdu.getValues()[0]);
-        LedArrayTime _ledTime = new LedArrayTime(_value);
+        LedArrayTime _ledTime = new LedArrayTime(_value, this.pm);
         new Thread(_ledTime).start();
         pdu.setFirsValue("Leds on while " + _value + "ms");
     }
