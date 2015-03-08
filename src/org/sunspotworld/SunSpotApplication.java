@@ -70,7 +70,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 processPDU(pdu);
             }
             //Duerme la ejecucion del hilo principal, en milisegundos.
-            Utils.sleep(1000);
+            Utils.sleep(500);
         }
         //notifyDestroyed();                      // cause the MIDlet to exit
     }
@@ -116,6 +116,12 @@ public class SunSpotApplication extends MIDlet implements Constans {
      */
     private void processPDU(PDU pdu) {
 
+        String[] values = pdu.getValues();
+        String command = "";
+        if (values != null && values.length > 0) {
+            command = values[0];
+        }
+
         switch (pdu.getType()) {
             case PING_PACKET_REQUEST:
                 replyToPing(pdu);
@@ -134,7 +140,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LED_SET_COLOR:
                 System.out.println("LED SET COLOR");
-                if (this.pm.ledSetColor(Integer.parseInt(pdu.getValues()[0]))) {
+                if (this.pm.ledSetColor(Integer.parseInt(command))) {
                     pdu.setFirsValue("Selected color");
                 } else {
                     pdu.setFirsValue("Error");
@@ -143,7 +149,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LED_SET_NUMBER:
                 System.out.println("LED SET NUMBER");
-                if (this.pm.ledSetOn(Integer.parseInt(pdu.getValues()[0]))) {
+                if (this.pm.ledSetOn(Integer.parseInt(command))) {
                     pdu.setFirsValue("Leds on");
                 } else {
                     pdu.setFirsValue("Error");
@@ -161,7 +167,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case LED_SET_STATE:
                 boolean _cond = false;
-                if (pdu.getValues()[0].equals("true")) {
+                if (command.equals("true")) {
                     _cond = true;
                 }
 
@@ -173,11 +179,11 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 System.out.println("LED SET " + _cond);
                 break;
             case LED_TIME:
-                System.out.println("LED TIME " + pdu.getValues()[0]);
+                System.out.println("LED TIME " + command);
                 setLedTime(pdu);
                 break;
             case LED_BLINK:
-                System.out.println("LED BLINK " + pdu.getValues()[0]);
+                System.out.println("LED BLINK " + command);
                 setLedBlink(pdu);
                 break;
             case CHECK:
@@ -186,7 +192,7 @@ public class SunSpotApplication extends MIDlet implements Constans {
                 break;
             case FEATURE:
                 System.out.println("FEATURES");
-                pdu.setFirsValue(configManager.configFeatures(pdu.getValues()[0]));
+                pdu.setFirsValue(configManager.configFeatures(command));
                 break;
             case READ_CONFIGURATION:
                 System.out.println("READ FEATURES");

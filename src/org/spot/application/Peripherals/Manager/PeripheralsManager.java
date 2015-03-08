@@ -23,7 +23,7 @@ public class PeripheralsManager implements IPeripheralsManager {
 
     private PeripheralsManager() {
         this.peripheralsFactory = new PeripheralsFactory();
-        this.lightSensor = this.peripheralsFactory.getTemperatureSensor("on");
+        this.lightSensor = this.peripheralsFactory.getLightSensor("on");
         this.temperatureSensor = this.peripheralsFactory.getTemperatureSensor("on");
         this.accelerometer = this.peripheralsFactory.getAccelerometer("on");
         this.ledArray = this.peripheralsFactory.getLedArray("on");
